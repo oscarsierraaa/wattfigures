@@ -1,0 +1,43 @@
+{
+  "name": "wattfigures",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"test/**/*.test.mjs\"",
+    "build:css": "tailwindcss -c tailwind.config.js -i assets/src/tw.css -o assets/tw.css --minify && npm run build:sharedcss",
+    "build:sharedcss": "node tools/minify-shared-css.mjs",
+    "build:pagination": "node tools/generate-pagination.mjs",
+    "build:prices": "node tools/generate-prices.mjs",
+    "build:rss": "node tools/generate-rss.mjs",
+    "build:scenarios": "node tools/generate-calc-scenarios.mjs",
+    "build:sitemap": "node tools/generate-sitemap.mjs",
+    "build:og": "node tools/generate-og.mjs",
+    "build:seed": "node tools/gen-supabase-seed.mjs",
+    "fonts:fetch": "node tools/fetch-fonts.mjs",
+    "build": "npm run build:css && npm run build:images && npm run build:appliances && npm run build:related && npm run build:scenarios && npm run build:prices && npm run build:us-states && npm run build:countries && npm run build:defaults && npm run build:tables && npm run build:heroes && npm run build:cards && npm run build:pagination && npm run build:adslots && npm run build:langswitch && npm run build:titles && npm run build:version && npm run build:searchindex && npm run build:search && npm run build:rss && npm run build:sitemap",
+    "build:langswitch": "node tools/inject-lang-switch.mjs",
+    "build:titles": "node tools/trim-long-titles.mjs",
+    "build:search": "pagefind --site . --output-subdir _pagefind --exclude-selectors \"nav, header, footer, #search-modal, .ad-box\"",
+    "build:searchindex": "node tools/generate-search-index.mjs",
+    "build:heroes": "node tools/generate-heroes.mjs",
+    "build:images": "node tools/build-images.mjs",
+    "build:appliances": "node tools/generate-appliances.mjs",
+    "build:tables": "node tools/wrap-tables.mjs",
+    "build:defaults": "node tools/stamp-price-defaults.mjs",
+    "build:version": "node tools/version-assets.mjs",
+    "build:related": "node tools/generate-calc-related.mjs",
+    "build:cards": "node tools/generate-section-cards.mjs",
+    "build:adslots": "node tools/inject-ad-slots.mjs",
+    "build:us-states": "node tools/generate-us-states.mjs",
+    "build:countries": "node tools/generate-country-pages.mjs",
+    "data:us-states": "node tools/fetch-us-states.mjs",
+    "data:prices": "node tools/fetch-prices.mjs"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.20",
+    "pagefind": "^1.5.2",
+    "sharp": "^0.35.3",
+    "tailwindcss": "^3.4.19"
+  }
+}

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>WattFigures</title>
+  <link>https://wattfigures.com/</link>
+  <description>Interactive calculators and plain-English running costs for every appliance in your home: electricity use, standby drain, EV charging and more.</description>
+  <language>en</language>
+  <atom:link href="https://wattfigures.com/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Electric Blanket Running Cost: Per Night and Per Winter</title>
+    <link>https://wattfigures.com/guides/electric-blanket-running-cost/</link>
+    <guid>https://wattfigures.com/guides/electric-blanket-running-cost/</guid>
+    <description>A 100 W electric blanket uses 0.2 kWh a night, 24 kWh a winter — about $4.32 in the US. What it costs in 23 countries, and what it really replaces.</description>
+    <pubDate>Mon, 27 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Space Heater Running Cost: Per Hour, Per Day and Per Winter</title>
+    <link>https://wattfigures.com/guides/space-heater-running-cost/</link>
+    <guid>https://wattfigures.com/guides/space-heater-running-cost/</guid>
+    <description>What a plug-in electric heater really costs per hour, per day and per season, with worked examples at real prices and cheaper ways to stay warm.</description>
+    <pubDate>Sun, 26 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Contracted Power in Spain: How Many kW Do You Need?</title>
+    <link>https://wattfigures.com/guides/contracted-power-spain/</link>
+    <guid>https://wattfigures.com/guides/contracted-power-spain/</guid>
+    <description>How Spain's contracted power charge works, why tripping your breaker means you're undersized, and how to size it right without overpaying.</description>
+    <pubDate>Wed, 22 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>EU Energy Label Explained: A–G and kWh/Year</title>
+    <link>https://wattfigures.com/guides/eu-energy-label-explained/</link>
+    <guid>https://wattfigures.com/guides/eu-energy-label-explained/</guid>
+    <description>How to read the EU energy label — what the letter grade means, why kWh/year predicts your bill, and where the old A+++ scale went.</description>
+    <pubDate>Wed, 22 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Why Is My Electricity Bill So High?</title>
+    <link>https://wattfigures.com/guides/why-is-my-electricity-bill-so-high/</link>
+    <guid>https://wattfigures.com/guides/why-is-my-electricity-bill-so-high/</guid>
+    <description>Before you panic about a shocking bill, check these usual suspects — from an appliance stuck running to a contract that no longer fits your home.</description>
+    <pubDate>Wed, 22 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Heat Pump vs Gas Boiler: Is It Cheaper?</title>
+    <link>https://wattfigures.com/guides/heat-pump-vs-gas-boiler-running-cost/</link>
+    <guid>https://wattfigures.com/guides/heat-pump-vs-gas-boiler-running-cost/</guid>
+    <description>A heat pump beats a gas boiler above one number: the break-even COP. It runs from 1.2 in Sweden to 3.6 in Belgium — the same machine, opposite verdicts.</description>
+    <pubDate>Sun, 19 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Air Conditioning Running Cost Calculator</title>
+    <link>https://wattfigures.com/calculators/air-conditioning/</link>
+    <guid>https://wattfigures.com/calculators/air-conditioning/</guid>
+    <description>See what your air conditioner costs to run per hour, per day and per cooling season from its power draw, daily hours and your electricity price.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Electricity Cost Calculator: Cost to Run Anything</title>
+    <link>https://wattfigures.com/calculators/electricity-cost/</link>
+    <guid>https://wattfigures.com/calculators/electricity-cost/</guid>
+    <description>Work out what any appliance costs to run per day, month and year from its wattage, hours of use and your price per kWh.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>EV Home Charging Cost Calculator</title>
+    <link>https://wattfigures.com/calculators/ev-charging/</link>
+    <guid>https://wattfigures.com/calculators/ev-charging/</guid>
+    <description>Estimate what charging your electric car at home costs — per full charge, per 100 km and per year — from your battery, efficiency and price per kWh.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Heat Pump vs Gas Boiler Cost Calculator</title>
+    <link>https://wattfigures.com/calculators/heat-pump-vs-gas/</link>
+    <guid>https://wattfigures.com/calculators/heat-pump-vs-gas/</guid>
+    <description>Compare a year of heating with a heat pump versus a gas boiler using your heat demand, the heat pump COP, boiler efficiency and fuel prices.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Washer and Dryer Running Cost Calculator</title>
+    <link>https://wattfigures.com/calculators/laundry-cost/</link>
+    <guid>https://wattfigures.com/calculators/laundry-cost/</guid>
+    <description>Estimate what your washing machine and tumble dryer cost per cycle, per week and per year from their energy per cycle and your electricity price.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>LED vs Halogen Savings Calculator</title>
+    <link>https://wattfigures.com/calculators/led-vs-halogen/</link>
+    <guid>https://wattfigures.com/calculators/led-vs-halogen/</guid>
+    <description>See how much you save each year by switching bulbs to LED, and how fast the change pays for itself, based on wattages, hours and your electricity price.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Solar Panel Payback Calculator</title>
+    <link>https://wattfigures.com/calculators/solar-payback/</link>
+    <guid>https://wattfigures.com/calculators/solar-payback/</guid>
+    <description>Estimate how many years a home solar system takes to pay for itself, from size, cost, yield, self-consumption and your electricity and export prices.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Standby Power Calculator: Vampire Devices</title>
+    <link>https://wattfigures.com/calculators/standby-power/</link>
+    <guid>https://wattfigures.com/calculators/standby-power/</guid>
+    <description>Add up what your always-on gadgets cost while 'off'. Estimate the yearly and monthly cost of standby (vampire) power across your home.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>How to Cut Standby Power at Home</title>
+    <link>https://wattfigures.com/guides/how-to-cut-standby-power/</link>
+    <guid>https://wattfigures.com/guides/how-to-cut-standby-power/</guid>
+    <description>A step-by-step plan to find and kill the vampire power your devices draw while switched off, and how much you can realistically save.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Time-of-Use Tariffs Explained</title>
+    <link>https://wattfigures.com/guides/time-of-use-tariffs-explained/</link>
+    <guid>https://wattfigures.com/guides/time-of-use-tariffs-explained/</guid>
+    <description>What time-of-use and off-peak electricity tariffs are, who they suit, and how shifting usage to cheaper hours can cut your bill.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>How to Understand Your Electricity Bill</title>
+    <link>https://wattfigures.com/guides/understanding-your-electricity-bill/</link>
+    <guid>https://wattfigures.com/guides/understanding-your-electricity-bill/</guid>
+    <description>Decode your electricity bill line by line: the unit rate, standing charge, taxes and what actually drives the total you pay each month.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Vampire Device Audit: A Room-by-Room Checklist</title>
+    <link>https://wattfigures.com/guides/vampire-device-audit-checklist/</link>
+    <guid>https://wattfigures.com/guides/vampire-device-audit-checklist/</guid>
+    <description>A printable room-by-room checklist to hunt down the always-on devices quietly adding to your electricity bill, and what to do about each.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+</channel>
+</rss>

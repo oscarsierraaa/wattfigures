@@ -1,0 +1,128 @@
+<!--INCLUDE:partials/head.html-->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "{{ARTICLE_TYPE}}",
+        "headline": "{{PAGE_TITLE}}",
+        "description": "{{PAGE_DESC}}",
+        "image": "https://{{DOMAIN}}/assets/img/{{OG_IMAGE}}",
+        "datePublished": "{{DATE_PUBLISHED}}",
+        "dateModified": "{{DATE_MODIFIED}}",
+        "inLanguage": "{{LANG_ATTR}}",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "{{CANONICAL}}" },
+        "author": { "@type": "Person", "name": "{{FOUNDER}}", "url": "https://{{DOMAIN}}/{{LANG_PREFIX}}legal/about/" },
+        "publisher": { "@type": "Organization", "name": "{{BRAND}}", "url": "https://{{DOMAIN}}/" }
+      },
+      { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "{{T_HOME}}", "item": "https://{{DOMAIN}}/{{LANG_PREFIX}}" },
+        { "@type": "ListItem", "position": 2, "name": "{{SECTION_LABEL}}", "item": "https://{{DOMAIN}}/{{LANG_PREFIX}}{{SECTION_SLUG}}/" },
+        { "@type": "ListItem", "position": 3, "name": "{{PAGE_TITLE}}", "item": "{{CANONICAL}}" }
+      ] },
+      { "@type": "FAQPage", "mainEntity": [ {{FAQ_JSONLD}} ] }
+    ]
+  }
+  </script>
+<!--INCLUDE:partials/nav.html-->
+
+  <main id="main" class="container" style="padding-top:2.5rem">
+    <nav aria-label="Breadcrumb" class="print-hide" style="font-size:.85rem;color:hsl(var(--muted-foreground))">
+      <a class="ul-link" href="{{HOME}}">{{T_HOME}}</a> /
+      <a class="ul-link" href="{{HOME}}{{SECTION_SLUG}}/">{{SECTION_LABEL}}</a> / {{PAGE_TITLE}}
+    </nav>
+
+    <article class="prose-sec" style="margin-top:1.5rem">
+      <h1 class="font-display" style="font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15">{{PAGE_TITLE}}</h1>
+<!--INCLUDE:partials/article-meta.html-->
+      <p class="lead" style="color:hsl(var(--muted-foreground))">{{PAGE_DESC}}</p>
+      {{DISCLAIMER_BLOCK}}
+
+      <!-- CALCULATOR BODY. The widget below is live: assets/calc.js evaluates
+           data-calc-out formulas from the data-calc-var inputs (no eval, CSP
+           safe). Adapt names/formulas to your topic: solar payback, 50/30/20
+           budget, lease vs buy, EV charging cost… The worked example + "how
+           the math works" sections are what make the page rank; the widget is
+           what makes it get bookmarked and shared. -->
+<!--IF:pageEn-->
+      <p>[EDIT: 2–3 sentences — the question this calculator answers and the
+         honest limits of the estimate.]</p>
+
+      <h2>Calculator</h2>
+      <div class="calc" data-calc>
+        <label>Appliance power (watts)
+          <input type="number" data-calc-var="watts" value="1000" min="0" step="any" inputmode="decimal" />
+        </label>
+        <label>Hours used per day
+          <input type="number" data-calc-var="hours" value="2" min="0" step="any" inputmode="decimal" />
+        </label>
+        <label>Electricity price (per kWh)
+          <input type="number" data-calc-var="price" value="0.25" min="0" step="any" inputmode="decimal" />
+        </label>
+        <div class="calc-results">
+          <p>Cost per day: <output data-calc-out="watts/1000*hours*price" data-calc-round="2" data-calc-prefix="$"></output></p>
+          <p>Cost per month: <output data-calc-out="watts/1000*hours*price*30" data-calc-round="2" data-calc-prefix="$"></output></p>
+          <p>Cost per year: <output data-calc-out="watts/1000*hours*price*365" data-calc-round="0" data-calc-prefix="$"></output></p>
+        </div>
+      </div>
+
+      <h2>How the math works</h2>
+      <p>[EDIT: spell the formula out in words with one worked example —
+         "a 1000 W heater running 2 h/day at $0.18/kWh costs 1 × 2 × 0.18 =
+         $0.36 a day" — take the price from data/energy-prices.json, and see
+         test/prices-in-prose.test.mjs, which checks it. Then a table with
+         3–4 realistic scenarios.]</p>
+
+      <h2>Assumptions and limits</h2>
+      <p>[EDIT: what the calculator ignores (standby, tariffs, seasonality) and
+         when the reader should not trust a simple estimate.]</p>
+<!--END:pageEn-->
+<!--IF:pageEs-->
+      <p>[EDITAR: 2–3 frases — la pregunta que responde esta calculadora y los
+         límites honestos de la estimación.]</p>
+
+      <h2>Calculadora</h2>
+      <div class="calc" data-calc>
+        <label>Potencia del aparato (vatios)
+          <input type="number" data-calc-var="watts" value="1000" min="0" step="any" inputmode="decimal" />
+        </label>
+        <label>Horas de uso al día
+          <input type="number" data-calc-var="hours" value="2" min="0" step="any" inputmode="decimal" />
+        </label>
+        <label>Precio de la luz (por kWh)
+          <input type="number" data-calc-var="price" value="0.25" min="0" step="any" inputmode="decimal" />
+        </label>
+        <div class="calc-results">
+          <p>Coste al día: <output data-calc-out="watts/1000*hours*price" data-calc-round="2" data-calc-suffix=" €"></output></p>
+          <p>Coste al mes: <output data-calc-out="watts/1000*hours*price*30" data-calc-round="2" data-calc-suffix=" €"></output></p>
+          <p>Coste al año: <output data-calc-out="watts/1000*hours*price*365" data-calc-round="0" data-calc-suffix=" €"></output></p>
+        </div>
+      </div>
+
+      <h2>Cómo funcionan los números</h2>
+      <p>[EDITAR: explica la fórmula con palabras y un ejemplo resuelto —
+         "un calefactor de 1000 W usado 2 h/día a 0,25 €/kWh cuesta
+         1 × 2 × 0,25 = 0,50 € al día". Luego una tabla con 3–4 escenarios.]</p>
+
+      <h2>Supuestos y límites</h2>
+      <p>[EDITAR: qué ignora la calculadora (standby, tarifas, estacionalidad) y
+         cuándo no fiarse de una estimación simple.]</p>
+<!--END:pageEs-->
+
+<!--INCLUDE:partials/ad-slot.html-->
+
+      <h2 id="faq">{{T_FAQ}}</h2>
+      {{FAQ_HTML}}
+    </article>
+
+<!--INCLUDE:partials/share.html-->
+
+    <aside class="prose-sec print-hide" style="margin-top:2rem">
+      <h2>{{T_RELATED}}</h2>
+      <ul>
+        <li><a class="ul-link" href="{{HOME}}{{SECTION_SLUG}}/">{{T_MOREIN}} {{SECTION_LABEL}}</a></li>
+      </ul>
+    </aside>
+  </main>
+
+<!--INCLUDE:partials/footer.html-->

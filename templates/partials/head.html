@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="{{LANG_ATTR}}" data-theme="dark" data-lang="{{LANG_UPPER}}" data-section="{{SECTION_SLUG}}">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!--IF:consent-->
+  <script src="{{REL}}assets/consent-init.js"></script>
+<!--END:consent-->
+<!--IF:gtm-->
+  <script src="{{REL}}assets/gtm-init.js" data-gtm-id="{{GTM_ID}}"></script>
+<!--END:gtm-->
+<!--IF:ga4-->
+  <script src="{{REL}}assets/ga4-init.js" data-ga4-id="{{GA4_ID}}"></script>
+<!--END:ga4-->
+  {{ROBOTS_META}}
+  <title>{{PAGE_TITLE}} | {{BRAND}}</title>
+  <meta name="description" content="{{PAGE_DESC}}" />
+  <meta name="keywords" content="{{PAGE_KEYWORDS}}" />
+  <link rel="canonical" href="{{CANONICAL}}" />
+<!--IF:es-->
+  <link rel="alternate" hreflang="en" href="{{HREF_EN}}" />
+  <link rel="alternate" hreflang="es" href="{{HREF_ES}}" />
+  <link rel="alternate" hreflang="x-default" href="{{HREF_EN}}" />
+<!--END:es-->
+<!--IF:verifyGoogle-->
+  <meta name="google-site-verification" content="{{VERIFY_GOOGLE}}" />
+<!--END:verifyGoogle-->
+<!--IF:verifyBing-->
+  <meta name="msvalidate.01" content="{{VERIFY_BING}}" />
+<!--END:verifyBing-->
+  <link rel="icon" href="{{REL}}assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="{{REL}}assets/img/apple-touch-icon.png" />
+  <link rel="manifest" href="{{REL}}site.webmanifest" />
+  <meta name="theme-color" content="{{THEME_COLOR}}" />
+  <link rel="alternate" type="application/rss+xml" title="{{BRAND}}" href="https://{{DOMAIN}}/{{LANG_PREFIX}}feed.xml" />
+
+  <meta property="og:type" content="{{OG_TYPE}}" />
+  <meta property="og:site_name" content="{{BRAND}}" />
+  <meta property="og:locale" content="{{OG_LOCALE}}" />
+  <meta property="og:title" content="{{PAGE_TITLE}} | {{BRAND}}" />
+  <meta property="og:description" content="{{PAGE_DESC}}" />
+  <meta property="og:url" content="{{CANONICAL}}" />
+  <meta property="og:image" content="https://{{DOMAIN}}/assets/img/{{OG_IMAGE}}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{PAGE_TITLE}} | {{BRAND}}" />
+  <meta name="twitter:description" content="{{PAGE_DESC}}" />
+  <meta name="twitter:image" content="https://{{DOMAIN}}/assets/img/{{OG_IMAGE}}" />
+
+  <script src="{{REL}}assets/theme-init.js"></script>
+<!--IF:cdnFonts-->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!--END:cdnFonts-->
+  <link rel="stylesheet" href="{{REL}}assets/shared.css" />
+  <link rel="stylesheet" href="{{REL}}assets/tw.css" />
+<!--IF:selfFonts-->
+  <link rel="stylesheet" href="{{REL}}assets/fonts.css" />
+<!--END:selfFonts-->
+<!--IF:cdnFonts-->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family={{FONT_SANS_URL}}:wght@400;500;600;700&family={{FONT_MONO_URL}}:wght@400;500&display=swap" />
+  <!-- Async font load: shared.js flips media to 'all' (inline onload= would be blocked by the CSP). -->
+  <link href="https://fonts.googleapis.com/css2?family={{FONT_SANS_URL}}:wght@400;500;600;700&family={{FONT_MONO_URL}}:wght@400;500&display=swap" rel="stylesheet" media="print" data-font-swap />
+  <noscript><link href="https://fonts.googleapis.com/css2?family={{FONT_SANS_URL}}:wght@400;500;600;700&family={{FONT_MONO_URL}}:wght@400;500&display=swap" rel="stylesheet" /></noscript>
+<!--END:cdnFonts-->
+<!--IF:adsense-->
+  <meta name="google-adsense-account" content="ca-{{PUBLISHER_ID}}" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-{{PUBLISHER_ID}}" crossorigin="anonymous"></script>
+<!--END:adsense-->
+</head>
+<body>
+<!--IF:gtm-->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{GTM_ID}}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!--END:gtm-->

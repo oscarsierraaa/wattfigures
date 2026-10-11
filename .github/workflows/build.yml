@@ -1,0 +1,87 @@
+# Reconstruye los artefactos del sitio (tw.css, paginación, buscador, feeds,
+# sitemap) cada vez que entra contenido nuevo en main.
+#
+# Por qué existe: n8n publica las guías escribiendo HTML directamente en GitHub,
+# sin pasar por `npm run build`. Sin este workflow, el sitemap, los feeds y el
+# índice de Pagefind se quedaban desactualizados hasta que alguien corría el
+# build en su portátil — la guía quedaba online pero invisible para el buscador
+# del sitio. Esto mueve el build fuera de la máquina de nadie.
+#
+# No entra en bucle: los push hechos con GITHUB_TOKEN no disparan workflows
+# (protección de GitHub). El paths-ignore es un cinturón extra por si algún día
+# se cambia a un PAT, que sí re-dispararía.
+
+name: Build site artifacts
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '_pagefind/**'
+      - 'assets/tw.css'
+      - 'sitemap.xml'
+      - '**/feed.xml'
+      - '**/*.md'
+  workflow_dispatch:
+
+# n8n hace 4 commits seguidos por publicación (2 páginas + 2 índices). Sin esto
+# se lanzarían 4 builds que competirían por el push. Solo interesa el último.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Historial completo: el paso de push hace rebase si n8n ha commiteado
+          # mientras corría el build, y un clon shallow no puede rebasar.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      # Glob, not a hand-listed set: a test file added later would otherwise
+      # never run here, and the build step below only runs if this one passes.
+      # Quoted so Node expands it — a bare directory is read as a module path.
+      - name: Tests
+        run: npm test
+
+      # Pagefind escribe fragmentos con nombre por hash: los de páginas
+      # borradas o retituladas se quedan ahí para siempre. Borrando el
+      # directorio antes, el índice se reconstruye limpio en cada build.
+      - name: Limpiar índice de búsqueda
+        run: rm -rf _pagefind
+
+      - run: npm run build
+
+      - name: Commit y push si hay cambios
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Sin cambios en los artefactos: nada que commitear.'
+            exit 0
+          fi
+          git commit -m 'chore: rebuild site artifacts [skip ci]'
+          # n8n puede haber pusheado durante el build. Reintentar con rebase.
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Push OK (intento $i)"
+              exit 0
+            fi
+            echo "Push rechazado, rebasando (intento $i)..."
+            git pull --rebase origin main
+          done
+          echo 'No se pudo pushear tras 3 intentos.'
+          exit 1

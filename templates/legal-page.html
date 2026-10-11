@@ -1,0 +1,24 @@
+<!--INCLUDE:partials/head.html-->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "WebPage", "name": "{{PAGE_TITLE}}", "url": "{{CANONICAL}}", "inLanguage": "{{LANG_ATTR}}" },
+      { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://{{DOMAIN}}/" },
+        { "@type": "ListItem", "position": 2, "name": "{{PAGE_TITLE}}", "item": "{{CANONICAL}}" }
+      ] }
+    ]
+  }
+  </script>
+<!--INCLUDE:partials/nav.html-->
+
+  <main id="main" class="container" style="padding-top:2.5rem">
+    <article class="prose-sec">
+      <h1 class="font-display" style="font-size:clamp(1.8rem,4vw,2.4rem)">{{PAGE_TITLE}}</h1>
+      <p style="color:hsl(var(--muted-foreground))">{{T_LASTUPD}}: {{DATE_MODIFIED}}</p>
+      {{LEGAL_BODY}}
+    </article>
+  </main>
+
+<!--INCLUDE:partials/footer.html-->

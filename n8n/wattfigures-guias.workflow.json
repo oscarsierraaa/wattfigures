@@ -1,0 +1,2634 @@
+{
+  "name": "WattFigures · Guías",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8,
+              "triggerAtMinute": 30
+            }
+          ]
+        }
+      },
+      "id": "f5421dfa-bf69-4678-8b8a-3eb93e665232",
+      "name": "Cron guias 08:30",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1392,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "24SbrRt5l7wAeDfo",
+          "cachedResultName": "wf_config"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "key",
+              "keyValue": "frecuencia_guias_dias"
+            },
+            {
+              "keyName": "key",
+              "keyValue": "ultima_ejecucion_guias"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "bb23a4b3-7120-4169-bece-0a6f19104553",
+      "name": "Leer config (guias)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -1168,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all().map(i => i.json);\nconst freqRow = rows.find(r => r.key === 'frecuencia_guias_dias');\nconst lastRow = rows.find(r => r.key === 'ultima_ejecucion_guias');\nconst freqDays = parseInt(freqRow && freqRow.value || '2', 10) || 2;\nconst todayUTC = new Date(Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate()));\nconst lastValue = lastRow && lastRow.value;\nif (lastValue) {\n  const lastRun = new Date(lastValue + 'T00:00:00Z');\n  const diffDays = Math.floor((todayUTC - lastRun) / 86400000);\n  if (diffDays < freqDays) {\n    return [];\n  }\n}\nreturn [{ json: { todayISO: todayUTC.toISOString().slice(0, 10) } }];"
+      },
+      "id": "de2af749-4d4c-4c7b-b08b-a337699c3043",
+      "name": "Toca hoy (guias)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -944,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "24SbrRt5l7wAeDfo",
+          "cachedResultName": "wf_config"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "key",
+              "keyValue": "ultima_ejecucion_guias"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "key": "ultima_ejecucion_guias",
+            "value": "={{ $('Toca hoy (guias)').first().json.todayISO }}"
+          },
+          "schema": [
+            {
+              "id": "key",
+              "displayName": "key",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "value",
+              "displayName": "value",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "481d9cef-b1d8-420d-b0c7-37e08d6b1162",
+      "name": "Actualizar ultima ejecucion (guias)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1488,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "keyValue": "idea_enviada"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "ee583304-dea6-4ad7-82a0-dba428afeec2",
+      "name": "Hay idea pendiente (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -512,
+        128
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().filter(i => i.json && i.json.id !== undefined);\nreturn [{ json: { hasPending: items.length > 0 } }];"
+      },
+      "id": "32546132-2845-4d10-909e-d40cc378cef1",
+      "name": "Idea pendiente (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "ip1",
+              "leftValue": "={{ $json.hasPending }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3fb42d77-2ab4-4e1f-b2a7-c55cebc6372e",
+      "name": "Idea pendiente (IF)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -64,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const row = $('Hay idea pendiente (Data Table)').first().json;\nreturn [{ json: { ...row, reminder: true } }];"
+      },
+      "id": "c4b22f0e-9f52-44a1-be02-a41078d76c15",
+      "name": "Recuperar idea pendiente (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        160,
+        16
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const row = $json;\nconst relevancia = (row.relevancia === null || row.relevancia === undefined) ? null : row.relevancia;\nconst lines = [];\nlines.push(row.reminder ? '🔁 [WattFigures] Recordatorio: esta idea sigue pendiente de respuesta' : '💡 [WattFigures] Nueva idea de guía');\nlines.push('');\nlines.push('Tema: ' + row.topic);\nlines.push('Keyword: ' + row.keyword);\nlines.push('Categoria: ' + row.category);\nif (relevancia !== null) lines.push('📈 Relevancia: ' + relevancia + '/100');\nif (row.notes) lines.push('Notas: ' + row.notes);\nlines.push('');\nlines.push('Se generara en EN+ES, se validara automaticamente y si TODO pasa se publicara sola en wattfigures.com, sin mas confirmacion.');\nconst text = lines.join('\\n');\nreturn [{ json: { rowId: row.id, text } }];"
+      },
+      "id": "e626ece4-4d5b-47a1-b1b3-7964220483f3",
+      "name": "Construir idea de guia (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        816,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.rowId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "idea_enviada"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8b42c3c7-7339-4d86-8157-eca69665d421",
+      "name": "Marcar idea enviada (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        128
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "={{ $('Construir idea de guia (Code)').first().json.text }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ Generar y publicar",
+                    "additionalFields": {
+                      "callback_data": "={{ 'wfguia:go:' + $('Construir idea de guia (Code)').first().json.rowId }}"
+                    }
+                  },
+                  {
+                    "text": "👎 Descartar",
+                    "additionalFields": {
+                      "callback_data": "={{ 'wfguia:skip:' + $('Construir idea de guia (Code)').first().json.rowId }}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "ef2ba682-e4b6-4329-8daa-ddc4ec552bca",
+      "name": "Enviar idea (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1264,
+        128
+      ],
+      "webhookId": "a5ba7982-7e8a-4cd8-a59a-057ce32aad57"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "keyValue": "pending"
+            },
+            {
+              "keyName": "in_scope",
+              "keyValue": "true"
+            }
+          ]
+        },
+        "limit": 1,
+        "orderBy": true,
+        "orderByColumn": "relevancia"
+      },
+      "id": "e52f9462-d4e3-4963-9998-541450d140ad",
+      "name": "Leer cola de guias",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        256
+      ],
+      "executeOnce": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().filter(i => i.json && i.json.id !== undefined);\nif (items.length === 0) {\n  return [{ json: { noTopic: true } }];\n}\nreturn [{ json: { ...items[0].json, noTopic: false } }];"
+      },
+      "id": "c4c82d58-e752-4d96-bdab-695684d58a2d",
+      "name": "Hay tema (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "ht1",
+              "leftValue": "={{ $json.noTopic }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "82a931b8-0c90-48e2-8eb6-5bb408454a21",
+      "name": "Hay tema (IF)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "ℹ️ [WattFigures] Hoy tocaba generar una guía, pero la cola wf_guias_cola no tiene ningún tema pending con in_scope=true. Añade temas nuevos en n8n → Data Tables → wf_guias_cola.",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "e807054a-93bb-498d-82a5-a6545099be61",
+      "name": "Avisar cola vacia (guias)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        336
+      ],
+      "webhookId": "4ac02950-8631-4d4d-8219-6d9e3904ce48"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "id": "045f2e8a-80b2-4d42-bea2-9b2b15ad9a66",
+      "name": "Telegram callback (WattFigures)",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1408,
+        912
+      ],
+      "webhookId": "fcab7554-780c-471d-8499-8b1c68e75d0d"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cb1",
+              "leftValue": "={{ ($json.callback_query && $json.callback_query.data) ? $json.callback_query.data : '' }}",
+              "rightValue": "wfguia:",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "03db2761-d28e-4dc0-ac25-a671574bcb12",
+      "name": "Es callback wfguia (IF)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -1184,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const trig = $('Telegram callback (WattFigures)').first().json || {};\nconst cb = trig.callback_query || {};\nconst data = cb.data ? String(cb.data) : '';\nconst queryId = cb.id || '';\nconst m = data.match(/^wfguia:(go|skip):(\\d+)$/);\nconst action = m ? m[1] : null;\nconst rowId = m ? parseInt(m[2], 10) : null;\nreturn [{ json: { action, rowId, queryId, data } }];"
+      },
+      "id": "ea79703b-02b7-4fea-970a-72a4579f3bd2",
+      "name": "Preparar accion guia (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "gs1",
+              "leftValue": "={{ $json.action }}",
+              "rightValue": "go",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8fe6fe08-b0f0-494e-83a9-0f9c70dcd083",
+      "name": "Guia go o skip (IF)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -736,
+        912
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.rowId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "en_progreso"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9c6355ff-d489-4853-817f-e8f7397c0c45",
+      "name": "Marcar en progreso (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -528,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "queryId": "={{ $('Preparar accion guia (Code)').first().json.queryId }}",
+        "additionalFields": {
+          "text": "Generando y validando la guia (EN+ES)... te aviso cuando este publicada."
+        }
+      },
+      "id": "675befe4-aa19-4152-84c0-22fd6f9446c9",
+      "name": "Ack go (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -304,
+        784
+      ],
+      "webhookId": "88d45454-c117-4727-b23a-cd8d01fc2d13"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $('Preparar accion guia (Code)').first().json.rowId }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "id": "cea8ec28-da1a-40f6-9c51-307703a1a367",
+      "name": "Leer tema por id",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        784
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a complete WattFigures guide for this topic:\n\nTopic: {{ $json.topic }}\nTarget keyword: {{ $json.keyword }}\nCategory: {{ $json.category }}\nEditor notes (may suggest internal links): {{ $json.notes }}\n\nFollow every rule in your system instructions exactly. Return only the JSON object matching the schema.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a professional home-energy writer for WattFigures (wattfigures.com), an English-language site that makes home electricity costs concrete: calculators, appliance running-cost pages and plain-English saving guides. Match the voice of the site's existing guides: calm, concrete, numeric, no hype — show the maths with typical wattages and a price per kWh, and always remind readers that results depend on their own tariff. Cite only real official sources (eia.gov, energy.gov, ec.europa.eu/eurostat, ofgem.gov.uk, energysavingtrust.org.uk, or a manufacturer's real support page) — never invent a URL, statistic, or price you are not certain is real.\n\nReturn a single JSON object matching the given schema. Hard requirements:\n1. LENGTH — read this twice. body_html must be 1300-1700 words, and anything under 1000 words is AUTOMATICALLY REJECTED: the whole run is thrown away and a human has to restart it. You cannot count words reliably while writing, so DO NOT TRY. Hit the length STRUCTURALLY instead: write 5-6 <h2> sections and give every single one of them at least 3 full paragraphs of 60-90 words each, plus its list or table where relevant. Five sections x 3 paragraphs x 75 words is roughly 1300 words — that is the target shape. Aim long: a 1600-word draft is fine, a 950-word draft is a total loss.\n2. Before you output the JSON, re-read your own body_html section by section. If ANY <h2> section has fewer than 3 paragraphs, it is too short — expand it with a worked cost example using real numbers, a second scenario (different tariff, different usage pattern, different climate), a common mistake readers make, or when the advice does not apply. Never pad with filler, repetition, or restatements of what you already said.\n3. QUOTES — write body_html as plain HTML with ordinary double quotes: <a href=\"/calculators/electricity-cost/\">. NEVER write backslash-escaped quotes such as href=\\\"...\\\" — the JSON layer handles escaping for you, and backslashes end up visible on the published page. Drafts containing them are rejected.\n4. INTERNAL LINKS — you may ONLY link to pages from these exact lists. Linking to any other WattFigures path is rejected as a broken link, so never guess or invent a slug, even if the editor notes suggest one that is not on these lists.\n   Calculators: /calculators/air-conditioning/, /calculators/electricity-cost/, /calculators/ev-charging/, /calculators/heat-pump-vs-gas/, /calculators/laundry-cost/, /calculators/led-vs-halogen/, /calculators/solar-payback/, /calculators/standby-power/\n   Guides: /guides/how-to-cut-standby-power/, /guides/time-of-use-tariffs-explained/, /guides/understanding-your-electricity-bill/, /guides/vampire-device-audit-checklist/\n   Appliances: /appliances/<slug>/ where slug is one of air-conditioner, ceiling-fan, clothes-iron, coffee-machine, dehumidifier, desktop-pc, dishwasher, electric-blanket, electric-kettle, electric-oven, electric-shower, electric-water-heater, freezer, game-console, hair-dryer, induction-hob, laptop, led-bulb, led-tv, microwave, monitor, refrigerator, slow-cooker, sound-system, space-heater, toaster, tumble-dryer, vacuum-cleaner, washing-machine, wifi-router\n   Include 2-4 of them, chosen because they are genuinely relevant to the topic.\n5. Answer-first opening: the FIRST paragraph of body_html must directly answer the reader's core question in 2-3 self-contained sentences that make sense quoted on their own, including a concrete typical number or range, so a Google featured snippet or AI assistant can lift it as the answer. Only AFTER that paragraph do you start explaining.\n6. At least 5 <h2> sections (aim for 5-6), each a genuine subtopic. Any <h3> must come after its parent <h2>. The LAST <h2> must be titled exactly 'The bottom line' with a short wrap-up — this is the site's established closing pattern.\n7. Use ONLY these HTML tags: h2, h3, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, a, code. Never h1, never h4/h5/h6. Tags must be attribute-free — only <a> may carry an attribute, and only href.\n8. Include at least one real <ul>/<ol> checklist AND one real <table> with a <thead> and a <tbody> where every row has exactly as many <td> as the header has <th> — ideally a cost table (watts x hours x price per kWh).\n9. In important paragraphs, wrap the single most actionable sentence in <strong> — at most one <strong> per paragraph.\n10. Exactly 3 or 4 faq_items, each a genuine reader question with a factual 1-2 sentence answer.\n11. title: 30-70 characters. ' | WattFigures' is NOT part of it — the site appends the suffix itself. headline: the on-page H1, may equal the title. lead: 1-2 sentence standfirst (can equal description). breadcrumb_name: 2-5 word short name.\n12. description: 100-175 characters, no double quotes.\n13. slug: kebab-case, 3-6 words, English.\n14. On-page SEO: the target keyword (or close natural variant) must appear in the title, the description, the first paragraph, and at least one <h2> — always naturally.\n\nReturn ONLY the JSON object. No commentary, no markdown fences."
+        }
+      },
+      "id": "bae4031a-f747-4612-b74b-a42eeef44720",
+      "name": "Redactar guia EN (Gemini)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        144,
+        784
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "id": "ea29867d-1ab7-4175-8156-3174794801bc",
+      "name": "Modelo Gemini (guia EN)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        144,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"title\":\"How Much Does a Dishwasher Cost to Run\",\"description\":\"What a dishwasher really adds to your electricity bill per cycle and per year, and the settings that cut the cost without worse results.\",\"slug\":\"dishwasher-running-cost\",\"keywords\":\"dishwasher energy cost, dishwasher cost per cycle, eco mode\",\"headline\":\"How Much Does a Dishwasher Cost to Run?\",\"breadcrumb_name\":\"Dishwasher running cost\",\"lead\":\"What a dishwasher really adds to your electricity bill per cycle and per year, and the settings that cut the cost without worse results.\",\"body_html\":\"<p>Answer-first opening paragraph...</p><h2>Section</h2><p>...at least 1300 words total across body_html...</p><ul><li>item</li></ul><table><thead><tr><th>A</th><th>B</th></tr></thead><tbody><tr><td>1</td><td>2</td></tr></tbody></table><h2>The bottom line</h2><p>...</p>\",\"faq_items\":[{\"question\":\"Does eco mode really save money?\",\"answer\":\"Yes — eco cycles run longer but heat the water less, which is where most of the energy goes.\"}]}"
+      },
+      "id": "030fed50-b336-4b5a-bbc9-c27cc6093c65",
+      "name": "Formato salida guia EN",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "function validateDraft(d) {\n  const errors = [];\n  if (!d.title || d.title.length < 30 || d.title.length > 70) errors.push('title length ' + (d.title ? d.title.length : 0) + ', expected 30-70');\n  if (!d.description || d.description.length < 100 || d.description.length > 175) errors.push('description length ' + (d.description ? d.description.length : 0) + ', expected 100-175');\n  if (!d.slug || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(d.slug)) errors.push('slug missing or not kebab-case');\n  if (!Array.isArray(d.faq_items) || d.faq_items.length < 3 || d.faq_items.length > 4) errors.push('faq_items count ' + (d.faq_items ? d.faq_items.length : 0) + ', expected 3-4');\n  const body = d.body_html || '';\n  const words = body.replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim().split(' ').filter(Boolean);\n  if (words.length < 1000) errors.push('body ' + words.length + ' words, expected >= 1000');\n  if (/<h1[ >]/.test(body)) errors.push('body contains h1');\n  const h2Count = (body.match(/<h2[ >]/g) || []).length;\n  if (h2Count < 2) errors.push('body has ' + h2Count + ' h2, expected >= 2');\n  if (/<h[4-6][ >]/.test(body)) errors.push('body uses h4/h5/h6');\n  const firstH2 = body.search(/<h2[ >]/);\n  const firstH3 = body.search(/<h3[ >]/);\n  if (firstH3 !== -1 && (firstH2 === -1 || firstH3 < firstH2)) errors.push('h3 before h2');\n  const hasList = /<(ul|ol)[ >]/.test(body);\n  const hasTable = /<table[ >]/.test(body);\n  if (!hasList && !hasTable) errors.push('no list or table');\n  const allowed = ['h2','h3','p','ul','ol','li','table','thead','tbody','tr','th','td','strong','em','a','code'];\n  const tagsUsed = [...body.matchAll(/<\\/?([a-z0-9]+)(?:\\s|>|\\/)/gi)].map(m => m[1].toLowerCase());\n  const bad = [...new Set(tagsUsed)].filter(t => !allowed.includes(t));\n  if (bad.length) errors.push('disallowed tags: ' + bad.join(','));\n  const hrefs = [...body.matchAll(/<a[^>]*href=\"([^\"]*)\"/g)].map(m => m[1]);\n  for (const h of hrefs) { if (h === '#' || h.startsWith('javascript:')) errors.push('dead link: ' + h); }\n  if (/\\\\\"/.test(body)) errors.push('body contains backslash-escaped quotes (emit plain HTML, the JSON layer escapes)');\n  const VALID_CALC = ['air-conditioning','electricity-cost','ev-charging','heat-pump-vs-gas','laundry-cost','led-vs-halogen','solar-payback','standby-power'];\n  const VALID_GUIDES = ['how-to-cut-standby-power','time-of-use-tariffs-explained','understanding-your-electricity-bill','vampire-device-audit-checklist','heat-pump-vs-gas-boiler-running-cost'];\n  const internal = [...body.matchAll(/href=\"(\\/(?:es\\/)?(?:calculators|guides)\\/[^\"]*)\"/g)].map(m => m[1]);\n  for (const u of internal) {\n    const parts = u.replace(/^\\/(es\\/)?/, '').replace(/\\/$/, '').split('/');\n    const sec = parts[0], sl = parts[1];\n    if (!sl) continue;\n    const ok = sec === 'calculators' ? VALID_CALC.includes(sl) : VALID_GUIDES.includes(sl);\n    if (!ok) errors.push('internal link to non-existent page: ' + u);\n  }\n  const badChars = ['Ã©','Ã³','Ã±','Ã­','Ã¡','Ãº','â€','Â¿','Â¡','�'];\n  for (const b of badChars) { if (body.includes(b) || (d.title || '').includes(b)) { errors.push('mojibake detected'); break; } }\n  return { valid: errors.length === 0, errors };\n}\n\nconst draft = $json.output || $json;\nconst result = validateDraft(draft);\nconst topic = $('Leer tema por id').first().json;\nreturn [{ json: { ...draft, category: topic.category, keyword: topic.keyword, _valid: result.valid, _errors: result.errors } }];"
+      },
+      "id": "1a241ee8-7073-4d8b-9895-317b60278d78",
+      "name": "Validar guia EN",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        528,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "ev1",
+              "leftValue": "={{ $json._valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fc508a26-ca7a-4496-b3e6-adf8f8fde0ae",
+      "name": "EN valida (IF)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Adapt this validated English WattFigures guide into natural Spanish for readers in Spain. Do not translate word-for-word — adapt institutions and references (EIA/energy.gov -> IDAE/CNMC/miteco.gob.es, Ofgem -> CNMC, dollar examples -> euros with PVPC-style examples) whenever the concept has a real Spanish equivalent; keep universal concepts as-is. Keep every internal WattFigures link but rewrite its href to the Spanish mirror by prefixing /es (e.g. /calculators/electricity-cost/ -> /es/calculators/electricity-cost/).\n\nOriginal English draft (JSON):\n{{ JSON.stringify({title: $json.title, description: $json.description, headline: $json.headline, breadcrumb_name: $json.breadcrumb_name, lead: $json.lead, keywords: $json.keywords, body_html: $json.body_html, faq_items: $json.faq_items, slug: $json.slug}) }}\n\nReturn a new JSON object in the SAME schema, fully in Spanish. Set slug to EXACTLY the same value as the English slug (the site shares one slug across languages). Same structural rules (word count, headings, list+table, FAQ count) as the English version; the LAST <h2> must be titled exactly \"La conclusión\".",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a professional home-energy writer for WattFigures (wattfigures.com) adapting English guides into Spanish for readers in Spain. Match the voice of the site's existing Spanish guides in /es/guides/: calm, concrete, numeric, no hype. Cite only real official Spanish or EU sources (idae.es, cnmc.es, miteco.gob.es, ec.europa.eu/eurostat, or a manufacturer's real Spanish support page) — never invent a URL, statistic, or price.\n\nReturn a single JSON object matching the given schema. Hard requirements:\n1. LENGTH — read this twice. body_html must be 1300-1700 words of natural Spanish prose, and anything under 1000 words is AUTOMATICALLY REJECTED: the whole run is thrown away and a human has to restart it. You cannot count words reliably while writing, so DO NOT TRY. Hit the length STRUCTURALLY instead: write 5-6 <h2> sections and give every single one of them at least 3 full paragraphs of 60-90 words each, plus its list or table where relevant. Five sections x 3 paragraphs x 75 words is roughly 1300 words — that is the target shape. The Spanish version must be as long as the English one; adapting is not summarising.\n2. Before you output the JSON, re-read your own body_html section by section. If ANY <h2> section has fewer than 3 paragraphs, expand it with a worked cost example in euros, a second scenario (otra tarifa, otro uso), or a common mistake. Never pad with filler or repetition.\n3. QUOTES — write body_html as plain HTML with ordinary double quotes: <a href=\"/es/calculators/electricity-cost/\">. NEVER write backslash-escaped quotes such as href=\\\"...\\\" — the JSON layer handles escaping for you, and backslashes end up visible on the published page. Drafts containing them are rejected. This has actually happened, so check your output before returning it.\n4. INTERNAL LINKS — same pages as the English guide but with the /es prefix, and ONLY from these lists. Never guess or invent a slug.\n   Calculadoras: /es/calculators/air-conditioning/, /es/calculators/electricity-cost/, /es/calculators/ev-charging/, /es/calculators/heat-pump-vs-gas/, /es/calculators/laundry-cost/, /es/calculators/led-vs-halogen/, /es/calculators/solar-payback/, /es/calculators/standby-power/\n   Guias: /es/guides/how-to-cut-standby-power/, /es/guides/time-of-use-tariffs-explained/, /es/guides/understanding-your-electricity-bill/, /es/guides/vampire-device-audit-checklist/\n   Electrodomesticos: /es/appliances/<slug>/ con slug de la lista inglesa (air-conditioner, washing-machine, dishwasher, refrigerator, etc.) — los slugs NO se traducen.\n5. Answer-first opening paragraph with a concrete typical number, self-contained.\n6. At least 5 <h2> sections (aim for 5-6); any <h3> after its parent <h2>; the LAST <h2> titled exactly 'La conclusión'.\n7. ONLY these tags: h2, h3, p, ul, ol, li, table, thead, tbody, tr, th, td, strong, em, a, code. Attribute-free except <a href>.\n8. At least one <ul>/<ol> AND one <table> with <thead> and consistent <tbody> rows.\n9. At most one <strong> per paragraph, marking the most actionable sentence.\n10. Exactly 3 or 4 faq_items in Spanish.\n11. title 30-70 characters WITHOUT ' | WattFigures'. description 100-175 characters, no double quotes. slug identical to the English slug.\n12. Natural Spanish from Spain (factura de la luz, término de energía, horas valle...).\n\nReturn ONLY the JSON object. No commentary, no markdown fences."
+        }
+      },
+      "id": "06a1eb38-24ea-4e10-86fe-42c1ace1e300",
+      "name": "Redactar guia ES (Gemini)",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        960,
+        784
+      ],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "id": "1b529cc9-7b4b-453c-9107-56cc85c2303f",
+      "name": "Modelo Gemini (guia ES)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        960,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\"title\":\"Cuánto cuesta usar el lavavajillas\",\"description\":\"Lo que el lavavajillas añade de verdad a tu factura por ciclo y por año, y los ajustes que recortan el coste sin peores resultados.\",\"slug\":\"dishwasher-running-cost\",\"keywords\":\"consumo lavavajillas, coste por ciclo, modo eco\",\"headline\":\"¿Cuánto cuesta usar el lavavajillas?\",\"breadcrumb_name\":\"Coste del lavavajillas\",\"lead\":\"Lo que el lavavajillas añade de verdad a tu factura por ciclo y por año, y los ajustes que recortan el coste.\",\"body_html\":\"<p>Párrafo de respuesta directa...</p><h2>Sección</h2><p>...mínimo 1300 palabras en total...</p><h2>La conclusión</h2><p>...</p>\",\"faq_items\":[{\"question\":\"¿El modo eco ahorra de verdad?\",\"answer\":\"Sí — los ciclos eco duran más pero calientan menos el agua, que es donde se va la mayor parte de la energía.\"}]}"
+      },
+      "id": "8a7873a6-f186-4750-8503-461240fbe10a",
+      "name": "Formato salida guia ES",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1120,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "function validateDraft(d) {\n  const errors = [];\n  if (!d.title || d.title.length < 30 || d.title.length > 70) errors.push('title length ' + (d.title ? d.title.length : 0) + ', expected 30-70');\n  if (!d.description || d.description.length < 100 || d.description.length > 175) errors.push('description length ' + (d.description ? d.description.length : 0) + ', expected 100-175');\n  if (!d.slug || !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(d.slug)) errors.push('slug missing or not kebab-case');\n  if (!Array.isArray(d.faq_items) || d.faq_items.length < 3 || d.faq_items.length > 4) errors.push('faq_items count ' + (d.faq_items ? d.faq_items.length : 0) + ', expected 3-4');\n  const body = d.body_html || '';\n  const words = body.replace(/<[^>]+>/g, ' ').replace(/\\s+/g, ' ').trim().split(' ').filter(Boolean);\n  if (words.length < 1000) errors.push('body ' + words.length + ' words, expected >= 1000');\n  if (/<h1[ >]/.test(body)) errors.push('body contains h1');\n  const h2Count = (body.match(/<h2[ >]/g) || []).length;\n  if (h2Count < 2) errors.push('body has ' + h2Count + ' h2, expected >= 2');\n  if (/<h[4-6][ >]/.test(body)) errors.push('body uses h4/h5/h6');\n  const firstH2 = body.search(/<h2[ >]/);\n  const firstH3 = body.search(/<h3[ >]/);\n  if (firstH3 !== -1 && (firstH2 === -1 || firstH3 < firstH2)) errors.push('h3 before h2');\n  const hasList = /<(ul|ol)[ >]/.test(body);\n  const hasTable = /<table[ >]/.test(body);\n  if (!hasList && !hasTable) errors.push('no list or table');\n  const allowed = ['h2','h3','p','ul','ol','li','table','thead','tbody','tr','th','td','strong','em','a','code'];\n  const tagsUsed = [...body.matchAll(/<\\/?([a-z0-9]+)(?:\\s|>|\\/)/gi)].map(m => m[1].toLowerCase());\n  const bad = [...new Set(tagsUsed)].filter(t => !allowed.includes(t));\n  if (bad.length) errors.push('disallowed tags: ' + bad.join(','));\n  const hrefs = [...body.matchAll(/<a[^>]*href=\"([^\"]*)\"/g)].map(m => m[1]);\n  for (const h of hrefs) { if (h === '#' || h.startsWith('javascript:')) errors.push('dead link: ' + h); }\n  if (/\\\\\"/.test(body)) errors.push('body contains backslash-escaped quotes (emit plain HTML, the JSON layer escapes)');\n  const VALID_CALC = ['air-conditioning','electricity-cost','ev-charging','heat-pump-vs-gas','laundry-cost','led-vs-halogen','solar-payback','standby-power'];\n  const VALID_GUIDES = ['how-to-cut-standby-power','time-of-use-tariffs-explained','understanding-your-electricity-bill','vampire-device-audit-checklist','heat-pump-vs-gas-boiler-running-cost'];\n  const internal = [...body.matchAll(/href=\"(\\/(?:es\\/)?(?:calculators|guides)\\/[^\"]*)\"/g)].map(m => m[1]);\n  for (const u of internal) {\n    const parts = u.replace(/^\\/(es\\/)?/, '').replace(/\\/$/, '').split('/');\n    const sec = parts[0], sl = parts[1];\n    if (!sl) continue;\n    const ok = sec === 'calculators' ? VALID_CALC.includes(sl) : VALID_GUIDES.includes(sl);\n    if (!ok) errors.push('internal link to non-existent page: ' + u);\n  }\n  const badChars = ['Ã©','Ã³','Ã±','Ã­','Ã¡','Ãº','â€','Â¿','Â¡','�'];\n  for (const b of badChars) { if (body.includes(b) || (d.title || '').includes(b)) { errors.push('mojibake detected'); break; } }\n  return { valid: errors.length === 0, errors };\n}\n\nconst draft = $json.output || $json;\nconst result = validateDraft(draft);\nconst en = $('Validar guia EN').first().json;\ndraft.slug = en.slug;\nreturn [{ json: { en: en, es: draft, category: en.category, _valid: result.valid, _errors: result.errors } }];"
+      },
+      "id": "004072d0-1bce-442d-95e8-b8beae40d651",
+      "name": "Validar guia ES",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "sv1",
+              "leftValue": "={{ $json._valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e916bde1-3746-4f66-aae3-0294d91bd31e",
+      "name": "ES valida (IF)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1568,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "articles",
+        "limit": 2,
+        "orderBy": "published_at.desc",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "section",
+              "condition": "eq",
+              "keyValue": "guides"
+            },
+            {
+              "keyName": "lang",
+              "condition": "eq",
+              "keyValue": "en"
+            },
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "published"
+            }
+          ]
+        }
+      },
+      "id": "307f1962-ed26-4d37-8764-fc32de5d38d0",
+      "name": "Relacionados EN (Supabase)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1792,
+        784
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Relacionados = 2 guias + 2 calculadoras al azar.\n// Las guias llegan del nodo anterior-anterior; $input trae las calculadoras.\nconst prev = $('Validar guia ES').first().json;\nconst guides = $('Relacionados EN (Supabase)').all().map(i => i.json).filter(r => r && r.url).slice(0, 2);\nconst calcs = $('Calculadoras EN (Supabase)').all().map(i => i.json).filter(r => r && r.url);\nconst pool = calcs.slice();\nconst picked = [];\nwhile (picked.length < 2 && pool.length) {\n  picked.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);\n}\nconst related = [...guides, ...picked].map(r => ({ url: r.url, title: r.title }));\nreturn [{ json: { ...prev, related_en: related } }];"
+      },
+      "id": "288b3a34-8ba5-43df-9196-fcbeb4271ee1",
+      "name": "Adjuntar relacionados EN",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "articles",
+        "limit": 2,
+        "orderBy": "published_at.desc",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "section",
+              "condition": "eq",
+              "keyValue": "guides"
+            },
+            {
+              "keyName": "lang",
+              "condition": "eq",
+              "keyValue": "es"
+            },
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "published"
+            }
+          ]
+        }
+      },
+      "id": "c9c0b2ac-0600-4eb4-a81c-e4cc9c6ffa46",
+      "name": "Relacionados ES (Supabase)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2224,
+        784
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Relacionados = 2 guias + 2 calculadoras al azar.\n// Las guias llegan del nodo anterior-anterior; $input trae las calculadoras.\nconst prev = $('Adjuntar relacionados EN').first().json;\nconst guides = $('Relacionados ES (Supabase)').all().map(i => i.json).filter(r => r && r.url).slice(0, 2);\nconst calcs = $('Calculadoras ES (Supabase)').all().map(i => i.json).filter(r => r && r.url);\nconst pool = calcs.slice();\nconst picked = [];\nwhile (picked.length < 2 && pool.length) {\n  picked.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);\n}\nconst related = [...guides, ...picked].map(r => ({ url: r.url, title: r.title }));\nreturn [{ json: { ...prev, related_es: related } }];"
+      },
+      "id": "18497302-ada0-4669-94ba-0c4dfb2497d1",
+      "name": "Adjuntar relacionados ES",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2448,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const prev = $('Adjuntar relacionados ES').first().json;\nconst en = prev.en;\nconst es = prev.es;\nconst slug = en.slug;\nconst todayISO = new Date().toISOString().slice(0, 10);\nconst canonicalEN = 'https://wattfigures.com/guides/' + slug + '/';\nconst canonicalES = 'https://wattfigures.com/es/guides/' + slug + '/';\nconst ogImage = 'https://wattfigures.com/assets/img/og-default.png';\n\nfunction mk(d, canonical) {\n  return {\n    title: d.title + ' | WattFigures',\n    description: d.description,\n    keywords: d.keywords,\n    headline: d.headline,\n    breadcrumb_name: d.breadcrumb_name,\n    lead: d.lead || d.description,\n    body_html: d.body_html,\n    faq_items: d.faq_items,\n    canonical_url: canonical,\n    date_published: todayISO,\n    related: []\n  };\n}\n\nconst draft = {\n  slug: slug,\n  category: prev.category,\n  og_image: ogImage,\n  en: Object.assign(mk(en, canonicalEN), { hreflang_es_url: canonicalES, related: prev.related_en || [] }),\n  es: Object.assign(mk(es, canonicalES), { hreflang_en_url: canonicalEN, related: prev.related_es || [] })\n};\nreturn [{ json: { draft: draft } }];"
+      },
+      "id": "d26adc21-32b5-46a5-a6d2-1d02e53c80cc",
+      "name": "Ensamblar borrador",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2672,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "wApHEkt17bpE3HDX",
+          "cachedResultName": "wf_guias_borradores"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "draft_json": "={{ JSON.stringify($json.draft) }}",
+            "status": "pending_publish",
+            "created_at": "={{ $now.toISODate() }}"
+          },
+          "schema": [
+            {
+              "id": "draft_json",
+              "displayName": "draft_json",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "created_at",
+              "displayName": "created_at",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8d18222b-a817-45c8-a57a-183c287ec131",
+      "name": "Guardar borrador (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2880,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "secforge-git"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "wattfigures"
+        },
+        "filePath": "tools/templates/guide-en.html.tpl",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "id": "3908c371-1d5a-412d-9476-75f58b4d409e",
+      "name": "Obtener plantilla EN (GitHub)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        3104,
+        784
+      ],
+      "executeOnce": true,
+      "webhookId": "c7c11b9b-3351-4a99-9884-0b40a00fb656"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "secforge-git"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "wattfigures"
+        },
+        "filePath": "tools/templates/guide-es.html.tpl",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "id": "0e95685a-25ab-4c8d-a9cd-caee9c0b008c",
+      "name": "Obtener plantilla ES (GitHub)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        3328,
+        784
+      ],
+      "executeOnce": true,
+      "webhookId": "97d08e8f-b78e-4fd1-b426-354d02e668ae"
+    },
+    {
+      "parameters": {
+        "jsCode": "const draft = $('Ensamblar borrador').first().json.draft;\nconst decode = (r) => Buffer.from(r.content, 'base64').toString('utf-8');\nconst tplEn = decode($('Obtener plantilla EN (GitHub)').first().json);\nconst tplEs = decode($('Obtener plantilla ES (GitHub)').first().json);\n\nfunction escHtml(s) {\n  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n}\nfunction faqJson(items) {\n  return JSON.stringify((items || []).map(f => ({ '@type': 'Question', name: f.question, acceptedAnswer: { '@type': 'Answer', text: f.answer } })));\n}\nfunction faqVisible(items) {\n  return (items || []).map(f => '<details class=\"faq-item\"><summary>' + escHtml(f.question) + '</summary><p>' + escHtml(f.answer) + '</p></details>').join('\\n      ');\n}\nfunction relatedItems(rel) {\n  return (rel || []).slice(0, 4).map(r => '        <li><a class=\"ul-link\" href=\"' + r.url + '\">' + escHtml(r.title) + '</a></li>').join('\\n');\n}\n\nfunction fill(tpl, lang) {\n  const d = lang === 'en' ? draft.en : draft.es;\n  const enc = encodeURIComponent;\n  const map = {\n    TITLE: escHtml(d.title), DESCRIPTION: escHtml(d.description), KEYWORDS: escHtml(d.keywords),\n    CANONICAL_URL: d.canonical_url,\n    HREFLANG_ES_URL: lang === 'en' ? d.hreflang_es_url : d.canonical_url,\n    HREFLANG_EN_URL: lang === 'es' ? d.hreflang_en_url : d.canonical_url,\n    OG_IMAGE: draft.og_image,\n    HEADLINE: escHtml(d.headline),\n    LEAD: escHtml(d.lead),\n    DATE_PUBLISHED: d.date_published,\n    BREADCRUMB_NAME: escHtml(d.breadcrumb_name),\n    BODY_HTML: d.body_html,\n    FAQ_JSONLD: faqJson(d.faq_items),\n    FAQ_VISIBLE: '      ' + faqVisible(d.faq_items),\n    RELATED_ITEMS: relatedItems(d.related),\n    CANONICAL_URL_ENC: enc(d.canonical_url),\n    OG_IMAGE_ENC: enc(draft.og_image),\n    HEADLINE_ENC: enc(d.headline)\n  };\n  let out = tpl;\n  for (const k of Object.keys(map)) {\n    out = out.split('{{' + k + '}}').join(String(map[k] == null ? '' : map[k]));\n  }\n  const leftover = out.match(/\\{\\{[A-Z0-9_]+\\}\\}/);\n  if (leftover) throw new Error('Placeholder sin rellenar (' + lang + '): ' + leftover[0]);\n  return out;\n}\n\nreturn [{ json: { draft: draft, htmlEn: fill(tplEn, 'en'), htmlEs: fill(tplEs, 'es') } }];"
+      },
+      "id": "6f19b182-7b40-49a3-86b5-bfb2f221cdcb",
+      "name": "Rellenar plantillas (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3552,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $json;\nreturn [\n  { json: { path: 'guides/' + d.draft.slug + '/index.html', fileContent: d.htmlEn, message: 'feat(guides): publicar ' + d.draft.slug + ' [n8n]' } },\n  { json: { path: 'es/guides/' + d.draft.slug + '/index.html', fileContent: d.htmlEs, message: 'feat(guides): publicar es/' + d.draft.slug + ' [n8n]' } }\n];"
+      },
+      "id": "35235474-af16-4ba1-b5a3-925d7a897907",
+      "name": "Preparar articulos nuevos (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3760,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "secforge-git"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "wattfigures"
+        },
+        "filePath": "={{ $json.path }}",
+        "fileContent": "={{ $json.fileContent }}",
+        "commitMessage": "={{ $json.message }}"
+      },
+      "id": "7de4254e-d40b-4113-8ac8-09ae11d67eb9",
+      "name": "Crear articulos (GitHub)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        3984,
+        784
+      ],
+      "webhookId": "d5f1cd30-3755-498d-9730-8a848574209f",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: {} }];"
+      },
+      "id": "9d8f1df8-551d-4a0d-86db-f56c0fd7d1d5",
+      "name": "Continuar tras crear articulos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4208,
+        784
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "secforge-git"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "wattfigures"
+        },
+        "filePath": "guides/index.html",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "id": "e9166f28-7e3f-44ba-8595-67ec3b802744",
+      "name": "Obtener indice EN (GitHub)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        4432,
+        784
+      ],
+      "executeOnce": true,
+      "webhookId": "bb4c1b34-8ae6-413c-a7f7-35317d6c50e7"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "secforge-git"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "wattfigures"
+        },
+        "filePath": "es/guides/index.html",
+        "asBinaryProperty": false,
+        "additionalParameters": {}
+      },
+      "id": "a2569903-bd4d-4fbb-9e61-2867d50f614b",
+      "name": "Obtener indice ES (GitHub)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        4640,
+        784
+      ],
+      "executeOnce": true,
+      "webhookId": "81a6a5d2-8d8a-4ced-8a7b-420bffb23109"
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $('Rellenar plantillas (Code)').first().json.draft;\nfunction decode(raw) { return Buffer.from(raw.content, 'base64').toString('utf-8'); }\nfunction escHtml(s) {\n  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');\n}\nfunction insertCardAndList(html, opts) {\n  const marker = '<!-- CARDS:START -->';\n  if (!html.includes(marker)) throw new Error('Marcador CARDS:START no encontrado en ' + opts.pagePath);\n  const card = '<a class=\"card\" href=\"' + d.slug + '/\"><div class=\"card-body\"><div class=\"chip\">' + opts.chip + '</div><h3 class=\"font-display\">' + escHtml(opts.h3) + '</h3><p>' + escHtml(opts.p) + '</p></div></a>';\n  let out = html.replace(marker, marker + '\\n' + card);\n  const anchor = '\"itemListElement\": [';\n  const anchorIdx = out.indexOf(anchor);\n  if (anchorIdx === -1) throw new Error('itemListElement no encontrado en ' + opts.pagePath);\n  const closeIdx = out.indexOf(']', anchorIdx);\n  if (closeIdx === -1) throw new Error('Cierre de itemListElement no encontrado en ' + opts.pagePath);\n  const segment = out.slice(anchorIdx, closeIdx);\n  const positions = [...segment.matchAll(/\"position\":\\s*(\\d+)/g)].map(m => parseInt(m[1], 10));\n  const nextPos = positions.length ? Math.max(...positions) + 1 : 1;\n  const escJ = (s) => String(s).replace(/\\\\/g, '\\\\\\\\').replace(/\"/g, '\\\\\"');\n  const entry = (positions.length ? ',' : '') + '\\n      { \"@type\": \"ListItem\", \"position\": ' + nextPos + ', \"url\": \"' + opts.canonical + '\", \"name\": \"' + escJ(opts.name) + '\" }\\n    ';\n  out = out.slice(0, closeIdx) + entry + out.slice(closeIdx);\n  return out;\n}\nconst enIdx = insertCardAndList(decode($('Obtener indice EN (GitHub)').first().json), { pagePath: 'guides/index.html', chip: 'Saving Guides', h3: d.en.headline, p: d.en.description, canonical: d.en.canonical_url, name: d.en.headline });\nconst esIdx = insertCardAndList(decode($('Obtener indice ES (GitHub)').first().json), { pagePath: 'es/guides/index.html', chip: 'Guías de ahorro', h3: d.es.headline, p: d.es.description, canonical: d.es.canonical_url, name: d.es.headline });\nreturn [\n  { json: { path: 'guides/index.html', fileContent: enIdx, message: 'feat(guides): tarjeta ' + d.slug + ' [n8n]' } },\n  { json: { path: 'es/guides/index.html', fileContent: esIdx, message: 'feat(guides): tarjeta es/' + d.slug + ' [n8n]' } }\n];"
+      },
+      "id": "f3a2de37-31ad-420c-9196-07d51007a21c",
+      "name": "Preparar indices actualizados (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4864,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "mode": "name",
+          "value": "secforge-git"
+        },
+        "repository": {
+          "__rl": true,
+          "mode": "name",
+          "value": "wattfigures"
+        },
+        "filePath": "={{ $json.path }}",
+        "fileContent": "={{ $json.fileContent }}",
+        "commitMessage": "={{ $json.message }}"
+      },
+      "id": "03951b05-b8e6-4250-a0dd-c97e0ad815e8",
+      "name": "Actualizar indices (GitHub)",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        5088,
+        784
+      ],
+      "webhookId": "3d15250d-bc4b-428c-913e-d94e848a148c",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{ json: {} }];"
+      },
+      "id": "d9b1fb4f-48b0-40a2-be7d-f088de0d3f77",
+      "name": "Continuar tras indices",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        5312,
+        784
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "sites",
+        "limit": 1,
+        "filterType": "string",
+        "filterString": "slug=eq.wattfigures"
+      },
+      "id": "521a039a-c9fe-4f02-b457-a478c078a729",
+      "name": "Buscar sitio (guia)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        5520,
+        784
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "tableId": "articles",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "site_id",
+              "fieldValue": "={{ $('Buscar sitio (guia)').first().json.id }}"
+            },
+            {
+              "fieldId": "section",
+              "fieldValue": "guides"
+            },
+            {
+              "fieldId": "slug",
+              "fieldValue": "={{ $('Rellenar plantillas (Code)').first().json.draft.slug }}"
+            },
+            {
+              "fieldId": "lang",
+              "fieldValue": "en"
+            },
+            {
+              "fieldId": "title",
+              "fieldValue": "={{ $('Rellenar plantillas (Code)').first().json.draft.en.headline }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('Rellenar plantillas (Code)').first().json.draft.en.description }}"
+            },
+            {
+              "fieldId": "url",
+              "fieldValue": "={{ '/guides/' + $('Rellenar plantillas (Code)').first().json.draft.slug + '/' }}"
+            },
+            {
+              "fieldId": "image_url",
+              "fieldValue": "={{ $('Rellenar plantillas (Code)').first().json.draft.og_image }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "published"
+            },
+            {
+              "fieldId": "published_at",
+              "fieldValue": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      },
+      "id": "e7b0663c-df46-4593-b12a-e50421faea62",
+      "name": "Insertar articulo EN (Supabase)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        5744,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "tableId": "articles",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "site_id",
+              "fieldValue": "={{ $('Buscar sitio (guia)').first().json.id }}"
+            },
+            {
+              "fieldId": "section",
+              "fieldValue": "guides"
+            },
+            {
+              "fieldId": "slug",
+              "fieldValue": "={{ $('Rellenar plantillas (Code)').first().json.draft.slug }}"
+            },
+            {
+              "fieldId": "lang",
+              "fieldValue": "es"
+            },
+            {
+              "fieldId": "title",
+              "fieldValue": "={{ $('Rellenar plantillas (Code)').first().json.draft.es.headline }}"
+            },
+            {
+              "fieldId": "description",
+              "fieldValue": "={{ $('Rellenar plantillas (Code)').first().json.draft.es.description }}"
+            },
+            {
+              "fieldId": "url",
+              "fieldValue": "={{ '/es/guides/' + $('Rellenar plantillas (Code)').first().json.draft.slug + '/' }}"
+            },
+            {
+              "fieldId": "image_url",
+              "fieldValue": "={{ $('Rellenar plantillas (Code)').first().json.draft.og_image }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "published"
+            },
+            {
+              "fieldId": "published_at",
+              "fieldValue": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      },
+      "id": "cd437ae3-6963-43d8-bccf-34f0ab176c45",
+      "name": "Insertar articulo ES (Supabase)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        5968,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $('Preparar accion guia (Code)').first().json.rowId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "publicada"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "20cfa717-357e-4a75-b334-687ac68902a0",
+      "name": "Marcar guia publicada (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        6192,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "wApHEkt17bpE3HDX",
+          "cachedResultName": "wf_guias_borradores"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "keyValue": "pending_publish"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "published"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "63c47c68-022a-4967-9923-fa67862ba002",
+      "name": "Actualizar borrador estado (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        6400,
+        784
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "={{ '✅ [WattFigures] Guía publicada:\\nEN: ' + $('Rellenar plantillas (Code)').first().json.draft.en.canonical_url + '\\nES: ' + $('Rellenar plantillas (Code)').first().json.draft.es.canonical_url + '\\n\\nRecuerda: git pull + npm run build para regenerar sitemap, buscador y RSS.' }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "be094bfc-68cc-4e37-a55c-4fa68f99b2cb",
+      "name": "Confirmar publicacion (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        6624,
+        784
+      ],
+      "executeOnce": true,
+      "webhookId": "93cfe908-e962-44da-97e6-91a0cc327301"
+    },
+    {
+      "parameters": {
+        "fromEmail": "secforgeweb@gmail.com",
+        "toEmail": "secforgeweb@gmail.com",
+        "subject": "=🆕 [WattFigures] Nueva guía publicada — {{ $('Rellenar plantillas (Code)').first().json.draft.en.headline }}",
+        "html": "=<h2>🆕 Nueva guía publicada en WattFigures</h2><p>EN: <a href=\"{{ $('Rellenar plantillas (Code)').first().json.draft.en.canonical_url }}\">{{ $('Rellenar plantillas (Code)').first().json.draft.en.headline }}</a></p><p>ES: <a href=\"{{ $('Rellenar plantillas (Code)').first().json.draft.es.canonical_url }}\">{{ $('Rellenar plantillas (Code)').first().json.draft.es.headline }}</a></p><p>Recuerda: git pull + npm run build.</p>",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "fc75ad9a-ac38-4bb4-8220-695225143092",
+      "name": "Enviar email publicacion",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        6848,
+        784
+      ],
+      "executeOnce": true,
+      "webhookId": "3c1f04c6-40e7-4916-99a4-aafd1c446e32"
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "❌ [WattFigures] Fallo publicando la guía en GitHub. Revisa la ejecución en n8n.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "8db73a70-5e50-4625-9016-741e97fc01fe",
+      "name": "Avisar fallo publicacion (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        4640,
+        1168
+      ],
+      "executeOnce": true,
+      "webhookId": "718f591b-f829-49cf-a47d-bab2be975480"
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "=⚠️ [WattFigures] La guía ES no pasó la validación: {{ $json._errors.join(\"; \") }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "697831ba-02cb-43fc-a2f6-1b14e35aa137",
+      "name": "Avisar validacion ES (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1792,
+        1168
+      ],
+      "webhookId": "42d127a9-6e97-42d3-988c-5986fe41162a"
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "⚠️ [WattFigures] Gemini falló redactando la guía ES. Revisa la ejecución en n8n y reintenta.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "1d91e975-697f-4da1-bea7-a8ed71cf9dba",
+      "name": "Avisar fallo Gemini ES (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1184,
+        1168
+      ],
+      "webhookId": "199645c6-b76f-409b-8ed0-fc1cdca149ff"
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "=⚠️ [WattFigures] La guía EN no pasó la validación: {{ $json._errors.join(\"; \") }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "78a250bd-f95c-405e-b98b-f0174c99dd78",
+      "name": "Avisar validacion EN (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        960,
+        1168
+      ],
+      "webhookId": "59f1069e-4d24-476d-b554-a2fcc5cee815"
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "⚠️ [WattFigures] Gemini falló redactando la guía EN. La cola queda en_progreso; revisa la ejecución en n8n y reintenta.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "3e303529-5d0f-40e1-a1fa-1f59e246b9dd",
+      "name": "Avisar fallo Gemini EN (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        1168
+      ],
+      "webhookId": "e5cffba5-236d-440b-bda3-6dec7c650e18"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.rowId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "descartada"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3e05e3f3-29e0-484b-91c8-10747a64daa0",
+      "name": "Marcar descartada (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -528,
+        1072
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "queryId": "={{ $('Preparar accion guia (Code)').first().json.queryId }}",
+        "additionalFields": {
+          "text": "Idea descartada."
+        }
+      },
+      "id": "0ca72e2e-9d89-46c6-a042-8340825570f6",
+      "name": "Ack skip (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -304,
+        1072
+      ],
+      "webhookId": "e8973a37-eb5b-41fd-9a0e-6e387681aa8a"
+    },
+    {
+      "parameters": {
+        "content": "## 📘 1 · Guías — idea del día\n\nCron 08:30 → cada N días (wf_config.frecuencia_guias_dias=2) coge el primer tema pending de wf_guias_cola y lo manda a Telegram con ✅ generar / 👎 descartar. Sin IA.",
+        "height": 168,
+        "width": 1404,
+        "color": 5
+      },
+      "id": "9bd3e03b-a87a-4869-b02a-a361413d0d29",
+      "name": "Sticky Note fa1b26ae",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1408,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## ✍️ 2 · Guías — redacción y validación\n\nSi ✅ (callback wfguia:go): Gemini EN → valida → ES → valida → 3 relacionados reales (Supabase wattfigures) → borrador en wf_guias_borradores.",
+        "width": 676,
+        "color": 5
+      },
+      "id": "0bf61063-dbc9-40ad-bd68-2f58508e5b96",
+      "name": "Sticky Note 617f83f3",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1376,
+        720
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 📦 3 · Guías — publicación (GitHub + Supabase)\n\nRellena tools/templates/guide-{en,es}.html, crea guides/<slug>/ y es/guides/<slug>/, inserta card+ItemList en los índices, registra en Supabase articles y confirma. Tras publicar: git pull + npm run build en local (sitemap/Pagefind/RSS). Contexto completo: n8n-guias-CONTEXTO.md en el repo.",
+        "height": 168,
+        "width": 1048,
+        "color": 5
+      },
+      "id": "eb87ab69-1b71-44fe-87a0-f0a1d3b90399",
+      "name": "Sticky Note 6bbd3678",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        3072,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "keyValue": "pending"
+            },
+            {
+              "keyName": "in_scope",
+              "keyValue": "true"
+            }
+          ]
+        },
+        "returnAll": true
+      },
+      "id": "ef67cd2d-e417-408b-8ac7-4f44b2ad4120",
+      "name": "Contar cola pendiente (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        160,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().filter(i => i.json && i.json.id !== undefined);\nconst count = items.length;\nreturn [{ json: { count, low: count <= 20 } }];"
+      },
+      "id": "b1714bb2-ef92-4b47-a67c-7b6381c799f1",
+      "name": "Evaluar pool bajo (Code)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        384,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "pb1",
+              "leftValue": "={{ $json.low }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "08853a01-d1dd-4278-9165-36a294bc9873",
+      "name": "Pool bajo (IF)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "-1004483603363",
+        "text": "={{ '⚠️ [WattFigures] Quedan solo ' + $json.count + ' temas pendientes en wf_guias_cola (umbral: 20). Añade más ideas a la cola para no quedarte sin material.' }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "id": "ca9de5a4-8c73-411d-8d0d-8350752a3739",
+      "name": "Avisar pool bajo (Telegram)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        816,
+        496
+      ],
+      "webhookId": "54ce3d70-80c8-4b32-8a48-8e47f2794c99",
+      "disabled": false
+    },
+    {
+      "id": "a8962315-81c3-4039-885c-2642247b7c78",
+      "name": "Calculadoras EN (Supabase)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1896,
+        928
+      ],
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "articles",
+        "limit": 8,
+        "orderBy": "published_at.desc",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "section",
+              "condition": "eq",
+              "keyValue": "calculators"
+            },
+            {
+              "keyName": "lang",
+              "condition": "eq",
+              "keyValue": "en"
+            },
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "published"
+            }
+          ]
+        }
+      },
+      "executeOnce": true
+    },
+    {
+      "id": "edc101b4-f327-4388-b2cf-c3958aee7a67",
+      "name": "Calculadoras ES (Supabase)",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2330,
+        928
+      ],
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "articles",
+        "limit": 8,
+        "orderBy": "published_at.desc",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "section",
+              "condition": "eq",
+              "keyValue": "calculators"
+            },
+            {
+              "keyName": "lang",
+              "condition": "eq",
+              "keyValue": "es"
+            },
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "published"
+            }
+          ]
+        }
+      },
+      "executeOnce": true
+    },
+    {
+      "id": "f00f4a7e-a36e-4430-b440-0c1123d6af51",
+      "name": "Devolver tema a la cola (Data Table)",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1024,
+        1120
+      ],
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "FyBrpvZFofxp3dK7",
+          "cachedResultName": "wf_guias_cola"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $('Preparar accion guia (Code)').first().json.rowId }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "pending"
+          },
+          "schema": [
+            {
+              "id": "status",
+              "displayName": "status",
+              "type": "string",
+              "display": true,
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "Cron guias 08:30": {
+      "main": [
+        [
+          {
+            "node": "Leer config (guias)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer config (guias)": {
+      "main": [
+        [
+          {
+            "node": "Toca hoy (guias)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hay idea pendiente (Data Table)": {
+      "main": [
+        [
+          {
+            "node": "Idea pendiente (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea pendiente (Code)": {
+      "main": [
+        [
+          {
+            "node": "Idea pendiente (IF)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Idea pendiente (IF)": {
+      "main": [
+        [
+          {
+            "node": "Recuperar idea pendiente (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Leer cola de guias",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Contar cola pendiente (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recuperar idea pendiente (Code)": {
+      "main": [
+        [
+          {
+            "node": "Construir idea de guia (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir idea de guia (Code)": {
+      "main": [
+        [
+          {
+            "node": "Marcar idea enviada (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar idea enviada (Data Table)": {
+      "main": [
+        [
+          {
+            "node": "Enviar idea (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer cola de guias": {
+      "main": [
+        [
+          {
+            "node": "Hay tema (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hay tema (Code)": {
+      "main": [
+        [
+          {
+            "node": "Hay tema (IF)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hay tema (IF)": {
+      "main": [
+        [
+          {
+            "node": "Construir idea de guia (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar cola vacia (guias)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram callback (WattFigures)": {
+      "main": [
+        [
+          {
+            "node": "Es callback wfguia (IF)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es callback wfguia (IF)": {
+      "main": [
+        [
+          {
+            "node": "Preparar accion guia (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar accion guia (Code)": {
+      "main": [
+        [
+          {
+            "node": "Guia go o skip (IF)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guia go o skip (IF)": {
+      "main": [
+        [
+          {
+            "node": "Marcar en progreso (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar descartada (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar en progreso (Data Table)": {
+      "main": [
+        [
+          {
+            "node": "Ack go (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ack go (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Leer tema por id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer tema por id": {
+      "main": [
+        [
+          {
+            "node": "Redactar guia EN (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redactar guia EN (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Validar guia EN",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar fallo Gemini EN (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Gemini (guia EN)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Redactar guia EN (Gemini)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formato salida guia EN": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Redactar guia EN (Gemini)",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar guia EN": {
+      "main": [
+        [
+          {
+            "node": "EN valida (IF)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EN valida (IF)": {
+      "main": [
+        [
+          {
+            "node": "Redactar guia ES (Gemini)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar validacion EN (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redactar guia ES (Gemini)": {
+      "main": [
+        [
+          {
+            "node": "Validar guia ES",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar fallo Gemini ES (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Gemini (guia ES)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Redactar guia ES (Gemini)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formato salida guia ES": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Redactar guia ES (Gemini)",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar guia ES": {
+      "main": [
+        [
+          {
+            "node": "ES valida (IF)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ES valida (IF)": {
+      "main": [
+        [
+          {
+            "node": "Relacionados EN (Supabase)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar validacion ES (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adjuntar relacionados EN": {
+      "main": [
+        [
+          {
+            "node": "Relacionados ES (Supabase)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Adjuntar relacionados ES": {
+      "main": [
+        [
+          {
+            "node": "Ensamblar borrador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ensamblar borrador": {
+      "main": [
+        [
+          {
+            "node": "Guardar borrador (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar borrador (Data Table)": {
+      "main": [
+        [
+          {
+            "node": "Obtener plantilla EN (GitHub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener plantilla EN (GitHub)": {
+      "main": [
+        [
+          {
+            "node": "Obtener plantilla ES (GitHub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener plantilla ES (GitHub)": {
+      "main": [
+        [
+          {
+            "node": "Rellenar plantillas (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rellenar plantillas (Code)": {
+      "main": [
+        [
+          {
+            "node": "Preparar articulos nuevos (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar articulos nuevos (Code)": {
+      "main": [
+        [
+          {
+            "node": "Crear articulos (GitHub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear articulos (GitHub)": {
+      "main": [
+        [
+          {
+            "node": "Continuar tras crear articulos",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar fallo publicacion (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continuar tras crear articulos": {
+      "main": [
+        [
+          {
+            "node": "Obtener indice EN (GitHub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener indice EN (GitHub)": {
+      "main": [
+        [
+          {
+            "node": "Obtener indice ES (GitHub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener indice ES (GitHub)": {
+      "main": [
+        [
+          {
+            "node": "Preparar indices actualizados (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar indices actualizados (Code)": {
+      "main": [
+        [
+          {
+            "node": "Actualizar indices (GitHub)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar indices (GitHub)": {
+      "main": [
+        [
+          {
+            "node": "Continuar tras indices",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Avisar fallo publicacion (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continuar tras indices": {
+      "main": [
+        [
+          {
+            "node": "Buscar sitio (guia)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar sitio (guia)": {
+      "main": [
+        [
+          {
+            "node": "Insertar articulo EN (Supabase)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insertar articulo EN (Supabase)": {
+      "main": [
+        [
+          {
+            "node": "Insertar articulo ES (Supabase)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insertar articulo ES (Supabase)": {
+      "main": [
+        [
+          {
+            "node": "Marcar guia publicada (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar guia publicada (Data Table)": {
+      "main": [
+        [
+          {
+            "node": "Actualizar borrador estado (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar borrador estado (Data Table)": {
+      "main": [
+        [
+          {
+            "node": "Confirmar publicacion (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar publicacion (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Enviar email publicacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar descartada (Data Table)": {
+      "main": [
+        [
+          {
+            "node": "Ack skip (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contar cola pendiente (Data Table)": {
+      "main": [
+        [
+          {
+            "node": "Evaluar pool bajo (Code)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluar pool bajo (Code)": {
+      "main": [
+        [
+          {
+            "node": "Pool bajo (IF)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pool bajo (IF)": {
+      "main": [
+        [
+          {
+            "node": "Avisar pool bajo (Telegram)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Relacionados EN (Supabase)": {
+      "main": [
+        [
+          {
+            "node": "Calculadoras EN (Supabase)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculadoras EN (Supabase)": {
+      "main": [
+        [
+          {
+            "node": "Adjuntar relacionados EN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Relacionados ES (Supabase)": {
+      "main": [
+        [
+          {
+            "node": "Calculadoras ES (Supabase)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculadoras ES (Supabase)": {
+      "main": [
+        [
+          {
+            "node": "Adjuntar relacionados ES",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Toca hoy (guias)": {
+      "main": [
+        [
+          {
+            "node": "Hay idea pendiente (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar idea (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Actualizar ultima ejecucion (guias)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar validacion EN (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Devolver tema a la cola (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar validacion ES (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Devolver tema a la cola (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar fallo Gemini EN (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Devolver tema a la cola (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Avisar fallo Gemini ES (Telegram)": {
+      "main": [
+        [
+          {
+            "node": "Devolver tema a la cola (Data Table)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": true,
+    "binaryMode": "separate"
+  },
+  "staticData": null
+}

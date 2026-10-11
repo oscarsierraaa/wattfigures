@@ -1,0 +1,31 @@
+  <a class="skip-link" href="#main">{{T_SKIP}}</a>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand font-display" href="{{HOME}}">{{BRAND_HTML}}</a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="{{HOME}}estimator/">{{ESTIMATOR_LABEL}}</a>
+<!--EACH:section-->
+        <a href="{{HOME}}{{S_SLUG}}/">{{S_LABEL}}</a>
+<!--END:section-->
+<!--IF:blog-->
+        <a href="{{HOME}}blog/">{{BLOG_LABEL}}</a>
+<!--END:blog-->
+        <a href="{{HOME}}electricity-prices/">{{PRICES_LABEL}}</a>
+        <a href="{{HOME}}legal/about/">{{ABOUT_LABEL}}</a>
+      </nav>
+      <div class="site-chrome">
+<!--IF:search-->
+        <div class="hdr-search" data-hdr-search data-src="/data/search-index.json" role="search"><input class="hs-input" type="search" autocomplete="off" placeholder="{{SEARCH_LABEL}}" aria-label="{{SEARCH_ARIA}}" role="combobox" aria-expanded="false" aria-controls="hs-panel" aria-autocomplete="list"><div class="hs-panel" id="hs-panel" role="listbox" hidden></div></div>
+<!--END:search-->
+<!--IF:es-->
+        <!-- tools/inject-lang-switch.mjs turns this into a real <a href> at
+             build time, pointed at this page's own reciprocal hreflang link.
+             Rendered as a button here because guides/legal/calculators are
+             hand-frozen HTML, never re-run through this template — the build
+             step is the one place that reaches every page alike. -->
+        <button class="chrome-btn" id="lang-toggle" type="button" aria-label="Language">{{LANG_OTHER}}</button>
+<!--END:es-->
+        <span id="site-chrome"></span>
+      </div>
+    </div>
+  </header>

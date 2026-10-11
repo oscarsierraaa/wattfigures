@@ -1,0 +1,123 @@
+<!--INCLUDE:partials/head.html-->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "HowTo",
+        "name": "{{PAGE_TITLE}}",
+        "description": "{{PAGE_DESC}}",
+        "image": "https://{{DOMAIN}}/assets/img/{{OG_IMAGE}}",
+        "inLanguage": "{{LANG_ATTR}}",
+        "totalTime": "PT30M",
+        "supply": [
+          { "@type": "HowToSupply", "name": "EDIT: first thing needed" },
+          { "@type": "HowToSupply", "name": "EDIT: second thing needed" }
+        ],
+        "tool": [
+          { "@type": "HowToTool", "name": "EDIT: tool used (or delete this array)" }
+        ],
+        "step": [
+          { "@type": "HowToStep", "position": 1, "name": "EDIT: step 1 title", "text": "EDIT: one-sentence summary of step 1.", "url": "{{CANONICAL}}#step-1" },
+          { "@type": "HowToStep", "position": 2, "name": "EDIT: step 2 title", "text": "EDIT: one-sentence summary of step 2.", "url": "{{CANONICAL}}#step-2" },
+          { "@type": "HowToStep", "position": 3, "name": "EDIT: step 3 title", "text": "EDIT: one-sentence summary of step 3.", "url": "{{CANONICAL}}#step-3" }
+        ]
+      },
+      {
+        "@type": "{{ARTICLE_TYPE}}",
+        "headline": "{{PAGE_TITLE}}",
+        "description": "{{PAGE_DESC}}",
+        "image": "https://{{DOMAIN}}/assets/img/{{OG_IMAGE}}",
+        "datePublished": "{{DATE_PUBLISHED}}",
+        "dateModified": "{{DATE_MODIFIED}}",
+        "inLanguage": "{{LANG_ATTR}}",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "{{CANONICAL}}" },
+        "author": { "@type": "Person", "name": "{{FOUNDER}}", "url": "https://{{DOMAIN}}/{{LANG_PREFIX}}legal/about/" },
+        "publisher": { "@type": "Organization", "name": "{{BRAND}}", "url": "https://{{DOMAIN}}/" }
+      },
+      { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "{{T_HOME}}", "item": "https://{{DOMAIN}}/{{LANG_PREFIX}}" },
+        { "@type": "ListItem", "position": 2, "name": "{{SECTION_LABEL}}", "item": "https://{{DOMAIN}}/{{LANG_PREFIX}}{{SECTION_SLUG}}/" },
+        { "@type": "ListItem", "position": 3, "name": "{{PAGE_TITLE}}", "item": "{{CANONICAL}}" }
+      ] },
+      { "@type": "FAQPage", "mainEntity": [ {{FAQ_JSONLD}} ] }
+    ]
+  }
+  </script>
+<!--INCLUDE:partials/nav.html-->
+
+  <main id="main" class="container" style="padding-top:2.5rem">
+    <nav aria-label="Breadcrumb" class="print-hide" style="font-size:.85rem;color:hsl(var(--muted-foreground))">
+      <a class="ul-link" href="{{HOME}}">{{T_HOME}}</a> /
+      <a class="ul-link" href="{{HOME}}{{SECTION_SLUG}}/">{{SECTION_LABEL}}</a> / {{PAGE_TITLE}}
+    </nav>
+
+    <article class="prose-sec" style="margin-top:1.5rem">
+      <h1 class="font-display" style="font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15">{{PAGE_TITLE}}</h1>
+<!--INCLUDE:partials/article-meta.html-->
+      <p class="lead" style="color:hsl(var(--muted-foreground))">{{PAGE_DESC}}</p>
+      {{DISCLAIMER_BLOCK}}
+
+      <!-- HOW-TO BODY. Keep the HowTo JSON-LD above in sync with these steps:
+           same titles, same order, ids step-1..step-N (add/remove both sides).
+           Each step: what to do, a photo/screenshot, and the mistake to avoid. -->
+<!--IF:pageEn-->
+      <p>Open with 2–3 sentences: what the reader gets, how long it takes, and
+         the skill level required. No filler history.</p>
+
+      <h2>{{T_ONESTEP}}</h2>
+      <ul>
+        <li>[EDIT: item + why it matters — link a spec/price table if gear]</li>
+        <li>[EDIT: item]</li>
+      </ul>
+
+      <h2 id="step-1">Step 1 — [EDIT: same title as JSON-LD step 1]</h2>
+      <p>[EDIT: the action, a screenshot or photo, the common mistake here.]</p>
+
+      <h2 id="step-2">Step 2 — [EDIT: title]</h2>
+      <p>[EDIT]</p>
+
+      <h2 id="step-3">Step 3 — [EDIT: title]</h2>
+      <p>[EDIT]</p>
+
+      <div class="callout"><strong>Tip:</strong> [EDIT: the one thing that saves the reader from re-doing this.]</div>
+<!--END:pageEn-->
+<!--IF:pageEs-->
+      <p>Abre con 2–3 frases: qué consigue el lector, cuánto tarda y qué nivel
+         requiere. Sin relleno.</p>
+
+      <h2>{{T_ONESTEP}}</h2>
+      <ul>
+        <li>[EDITAR: elemento + por qué importa]</li>
+        <li>[EDITAR: elemento]</li>
+      </ul>
+
+      <h2 id="step-1">Paso 1 — [EDITAR: mismo título que el paso 1 del JSON-LD]</h2>
+      <p>[EDITAR: la acción, una captura o foto, y el error típico aquí.]</p>
+
+      <h2 id="step-2">Paso 2 — [EDITAR: título]</h2>
+      <p>[EDITAR]</p>
+
+      <h2 id="step-3">Paso 3 — [EDITAR: título]</h2>
+      <p>[EDITAR]</p>
+
+      <div class="callout"><strong>Consejo:</strong> [EDITAR: lo único que evita tener que repetir el trabajo.]</div>
+<!--END:pageEs-->
+
+<!--INCLUDE:partials/ad-slot.html-->
+
+      <h2 id="faq">{{T_FAQ}}</h2>
+      {{FAQ_HTML}}
+    </article>
+
+<!--INCLUDE:partials/share.html-->
+
+    <aside class="prose-sec print-hide" style="margin-top:2rem">
+      <h2>{{T_RELATED}}</h2>
+      <ul>
+        <li><a class="ul-link" href="{{HOME}}{{SECTION_SLUG}}/">{{T_MOREIN}} {{SECTION_LABEL}}</a></li>
+      </ul>
+    </aside>
+  </main>
+
+<!--INCLUDE:partials/footer.html-->

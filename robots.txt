@@ -1,0 +1,9 @@
+# WattFigures robots.txt
+User-agent: *
+Allow: /
+
+Disallow: /uploads/
+Disallow: /*.bak$
+Disallow: /*.tmp$
+
+Sitemap: https://wattfigures.com/sitemap.xml

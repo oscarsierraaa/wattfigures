@@ -1,0 +1,8 @@
+# WattFigures — redirects (Netlify / Cloudflare Pages). Generated file.
+# Formato: <from> <to> <status>
+# Nota: la regla 404 solo la honra Netlify; Cloudflare Pages ignora estados 404
+# en _redirects (sirve el 404.html raíz de forma nativa).
+/es/*   /es/404.html   404
+
+# Añade aquí tus 301 cuando migres URLs, p. ej.:
+# /old-section/*   /new-section/:splat   301

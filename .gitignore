@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log
+
+# Local env / secrets
+.env
+.env.*
+
+# Local analysis artifact (graphify knowledge graph). Lives inside the site
+# root, so keep it out of the repo — and note that `npm run build` will index
+# its graph.html into the site search unless it is absent. See README.
+graphify-out/
+
+# NOTE: build artifacts (assets/tw.css, _pagefind/, sitemap.xml) are COMMITTED
+# on purpose in this project (no-build static hosting). Do not ignore them.

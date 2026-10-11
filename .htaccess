@@ -1,0 +1,118 @@
+# WattFigures — Apache .htaccess (generated). Clean URLs, security headers, cache.
+
+RewriteEngine On
+
+# ── CANONICAL HOST ───────────────────────────────────────────────────────
+# www and apex both answered 200, so Google picked per URL and picked wrong:
+# it indexed www copies of /calculators/ and /electricity-prices/ and ignored
+# their rel=canonical. The apex is the host in the sitemap, the canonicals and
+# the hreflang, so everything 301s there. Must stay above the clean-URL rule
+# so a www *.html request redirects once, not twice.
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# ── CLEAN URLS ───────────────────────────────────────────────────────────
+# Pages live as section/slug/index.html, served natively by DirectoryIndex.
+# 301 any leftover *.html to its clean folder, except 404.html and real files.
+RewriteCond %{REQUEST_URI} !^/404\.html$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)\.html$ /$1/ [R=301,L]
+
+ErrorDocument 404 /404.html
+
+# ── CACHE ────────────────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html              "access plus 1 hour"
+  ExpiresByType text/css               "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/svg+xml          "access plus 1 month"
+  ExpiresByType image/webp             "access plus 1 month"
+  ExpiresByType image/png              "access plus 1 month"
+  ExpiresByType font/woff2             "access plus 1 year"
+</IfModule>
+
+# ── SECURITY HEADERS ─────────────────────────────────────────────────────
+# script-src/connect-src carry Google Tag Manager + GA4's domains up front
+# (googletagmanager.com to load gtag.js/gtm.js, google-analytics.com and its
+# regional subdomains for the actual hit) even though analytics.gtmId/ga4Id
+# are still null in site.config.json. Consent Mode (assets/consent-init.js)
+# is what actually keeps GA4 from collecting anything before the visitor
+# accepts — the CSP entry here only stops it being *blocked outright* the
+# day an ID is finally set, so turning on analytics later needs no header
+# change and no redeploy surprise.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; media-src 'self'; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "accelerometer=(), autoplay=(self), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), interest-cohort=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), xr-spatial-tracking=()"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set Cross-Origin-Resource-Policy "same-origin"
+  Header always set Cross-Origin-Embedder-Policy "credentialless"
+  Header unset X-Powered-By
+  Header unset Server
+</IfModule>
+
+# ── COMPRESSION ──────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# ── TYPES ────────────────────────────────────────────────────────────────
+AddType application/manifest+json .webmanifest
+
+# ── PROTECT SENSITIVE FILES / NO LISTING ─────────────────────────────────
+<FilesMatch "\.(env|git|gitignore|htaccess|htpasswd|ini|log|sh|sql|bak|config|md|json)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+# Exception: sitemap and site data the browser must fetch stay served.
+# appliance-index.json powers the client-side appliance finder (appliance-search.js).
+<FilesMatch "^(sitemap\.xml|posts\.json|appliance-index.json|energy-prices.json|estimator-appliances.json|search-index.json|ads\.txt|robots\.txt)$">
+  <IfModule mod_authz_core.c>
+    Require all granted
+  </IfModule>
+</FilesMatch>
+# _originals/ holds the full-resolution photo masters that tools/build-images.mjs
+# derives assets/img/** from. They are kept in the repo so the set survives, but
+# they are 68 MB of PNG and must never be reachable over HTTP.
+<IfModule mod_rewrite.c>
+  RewriteRule ^_originals/ - [F,L]
+</IfModule>
+Options -Indexes
+<IfModule mod_rewrite.c>
+  RewriteRule (^|/)\. - [F]
+</IfModule>
+
+# ── DEV DIRS NOT PART OF THE SITE (left on disk by a git-checkout deploy) ──
+RedirectMatch 403 ^/(tools|templates|src|node_modules)(/.*)?$
+
+# ═════════════════════════════════════════════════════════════════════════
+# ADSENSE ACTIVATION — do this ONLY when the ad code goes live.
+# The Content-Security-Policy set above BLOCKS AdSense on purpose, which keeps
+# the site tight while Google reviews it. To turn ads on:
+#
+#   1. Put your publisher ID in site.config.json (adsense.publisherId).
+#   2. Create /ads.txt at the web root with exactly one line:
+#        google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#   3. REPLACE the Content-Security-Policy header above with the line below.
+#      It allows AdSense/DoubleClick, the ad loader, the ad-traffic-quality
+#      checks, and — critical for EEA/UK revenue — Google's certified consent
+#      message (fundingchoicesmessages.google.com). Without that origin the
+#      mandatory consent banner is silently blocked and EEA traffic earns zero.
+#   4. Configure the consent message in AdSense > Privacy & messaging.
+#
+# Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://pagead2.googlesyndication.com https://partner.googleadservices.com https://tpc.googlesyndication.com https://www.googletagservices.com https://adservice.google.com https://ep2.adtrafficquality.google https://fundingchoicesmessages.google.com; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; media-src 'self'; connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://ep1.adtrafficquality.google https://csi.gstatic.com https://fundingchoicesmessages.google.com; frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com https://ep1.adtrafficquality.google https://fundingchoicesmessages.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+#
+# ALSO: this config sets Cross-Origin-Embedder-Policy "credentialless", which
+# can block third-party ad frames. If ads render blank with COEP errors in the
+# console, remove that header — it is not required for the rest of the site.
+#
+# NOTE: there is no 'unsafe-inline' for scripts, so an inline
+# (adsbygoogle).push({}) snippet WILL be blocked. Use an external file
+# (assets/ads-init.js) as the rest of the site does.
+# ═════════════════════════════════════════════════════════════════════════

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>WattFigures</title>
+  <link>https://wattfigures.com/es/</link>
+  <description>Calculadoras interactivas y el coste real, en cristiano, de cada aparato de tu casa: consumo eléctrico, standby, carga del coche eléctrico y más.</description>
+  <language>es</language>
+  <atom:link href="https://wattfigures.com/es/feed.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Cuánto gasta una manta eléctrica: por noche y por temporada</title>
+    <link>https://wattfigures.com/es/guides/electric-blanket-running-cost/</link>
+    <guid>https://wattfigures.com/es/guides/electric-blanket-running-cost/</guid>
+    <description>Una manta de 100 W gasta 0,2 kWh por noche y 24 kWh por temporada — unos 6,48 € en España. Lo que cuesta en 23 países y a qué sustituye de verdad.</description>
+    <pubDate>Mon, 27 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Cuánto gasta una estufa eléctrica: por hora, día y temporada</title>
+    <link>https://wattfigures.com/es/guides/space-heater-running-cost/</link>
+    <guid>https://wattfigures.com/es/guides/space-heater-running-cost/</guid>
+    <description>Lo que cuesta de verdad una estufa eléctrica por hora, por día y en toda una temporada, con ejemplos a precios reales y las formas más baratas de pasar el frío.</description>
+    <pubDate>Sun, 26 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Potencia contratada: cuántos kW necesitas de verdad</title>
+    <link>https://wattfigures.com/es/guides/contracted-power-spain/</link>
+    <guid>https://wattfigures.com/es/guides/contracted-power-spain/</guid>
+    <description>Cómo funciona el término de potencia, por qué saltan los plomos si te quedas corto y cómo calcular los kW que necesitas sin pagar de más.</description>
+    <pubDate>Wed, 22 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>La etiqueta energética europea: A-G y kWh/año</title>
+    <link>https://wattfigures.com/es/guides/eu-energy-label-explained/</link>
+    <guid>https://wattfigures.com/es/guides/eu-energy-label-explained/</guid>
+    <description>Cómo leer la etiqueta energética — qué significa la letra, por qué los kWh/año predicen tu factura, y qué pasó con la antigua escala A+++.</description>
+    <pubDate>Wed, 22 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Por qué mi factura de la luz es tan alta</title>
+    <link>https://wattfigures.com/es/guides/why-is-my-electricity-bill-so-high/</link>
+    <guid>https://wattfigures.com/es/guides/why-is-my-electricity-bill-so-high/</guid>
+    <description>Antes de agobiarte por una factura que no esperabas, revisa estos sospechosos habituales antes de pensar en una avería.</description>
+    <pubDate>Wed, 22 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Bomba de calor vs caldera de gas: ¿más barato?</title>
+    <link>https://wattfigures.com/es/guides/heat-pump-vs-gas-boiler-running-cost/</link>
+    <guid>https://wattfigures.com/es/guides/heat-pump-vs-gas-boiler-running-cost/</guid>
+    <description>Una bomba de calor gana a una caldera de gas más allá de un número: el COP de equilibrio, de 1,2 en Suecia a 3,6 en Bélgica — misma máquina, veredictos opuestos.</description>
+    <pubDate>Sun, 19 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Calculadora del coste del aire acondicionado</title>
+    <link>https://wattfigures.com/es/calculators/air-conditioning/</link>
+    <guid>https://wattfigures.com/es/calculators/air-conditioning/</guid>
+    <description>Descubre lo que cuesta el aire acondicionado por hora, al día y por temporada según su potencia, las horas de uso y tu precio de la luz.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Calculadora de coste eléctrico por aparato</title>
+    <link>https://wattfigures.com/es/calculators/electricity-cost/</link>
+    <guid>https://wattfigures.com/es/calculators/electricity-cost/</guid>
+    <description>Calcula lo que cuesta usar cualquier aparato al día, al mes y al año según su potencia, las horas de uso y tu precio del kWh.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Calculadora de carga del coche eléctrico en casa</title>
+    <link>https://wattfigures.com/es/calculators/ev-charging/</link>
+    <guid>https://wattfigures.com/es/calculators/ev-charging/</guid>
+    <description>Estima lo que cuesta cargar tu coche eléctrico en casa — por carga completa, por 100 km y al año — según tu batería, eficiencia y precio del kWh.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Calculadora: bomba de calor vs caldera de gas</title>
+    <link>https://wattfigures.com/es/calculators/heat-pump-vs-gas/</link>
+    <guid>https://wattfigures.com/es/calculators/heat-pump-vs-gas/</guid>
+    <description>Compara un año de calefacción: bomba de calor frente a caldera de gas, según tu demanda, el COP y los precios.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Calculadora del coste de lavadora y secadora</title>
+    <link>https://wattfigures.com/es/calculators/laundry-cost/</link>
+    <guid>https://wattfigures.com/es/calculators/laundry-cost/</guid>
+    <description>Estima lo que cuestan tu lavadora y secadora por ciclo, por semana y al año según su energía por ciclo y tu precio de la luz.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Calculadora de ahorro: LED vs halógeno</title>
+    <link>https://wattfigures.com/es/calculators/led-vs-halogen/</link>
+    <guid>https://wattfigures.com/es/calculators/led-vs-halogen/</guid>
+    <description>Descubre cuánto ahorras al año al cambiar tus bombillas a LED y en cuánto tiempo se amortiza, según las potencias, las horas y tu precio de la luz.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Calculadora de amortización de placas solares</title>
+    <link>https://wattfigures.com/es/calculators/solar-payback/</link>
+    <guid>https://wattfigures.com/es/calculators/solar-payback/</guid>
+    <description>Estima en cuántos años se amortiza una instalación solar según su tamaño, coste, producción anual, autoconsumo y tus precios de electricidad y de excedentes.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Calculadora de standby (aparatos vampiro)</title>
+    <link>https://wattfigures.com/es/calculators/standby-power/</link>
+    <guid>https://wattfigures.com/es/calculators/standby-power/</guid>
+    <description>Suma lo que te cuestan los aparatos siempre enchufados aunque estén 'apagados'. Estima el coste anual y mensual del consumo en standby de tu casa.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Cómo eliminar el consumo en standby en casa</title>
+    <link>https://wattfigures.com/es/guides/how-to-cut-standby-power/</link>
+    <guid>https://wattfigures.com/es/guides/how-to-cut-standby-power/</guid>
+    <description>Un plan paso a paso para encontrar y eliminar el consumo vampiro que gastan tus aparatos apagados, y cuánto puedes ahorrar de verdad.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Tarifas por horas: cómo funcionan</title>
+    <link>https://wattfigures.com/es/guides/time-of-use-tariffs-explained/</link>
+    <guid>https://wattfigures.com/es/guides/time-of-use-tariffs-explained/</guid>
+    <description>Qué son las tarifas por horas y con discriminación horaria, a quién convienen y cómo desplazar el consumo a las horas baratas recorta la factura.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Cómo entender tu factura de la luz</title>
+    <link>https://wattfigures.com/es/guides/understanding-your-electricity-bill/</link>
+    <guid>https://wattfigures.com/es/guides/understanding-your-electricity-bill/</guid>
+    <description>Descifra tu factura de la luz línea a línea: el término de energía, el de potencia, los impuestos y lo que de verdad marca el total que pagas cada mes.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+  <item>
+    <title>Auditoría de aparatos vampiro por habitaciones</title>
+    <link>https://wattfigures.com/es/guides/vampire-device-audit-checklist/</link>
+    <guid>https://wattfigures.com/es/guides/vampire-device-audit-checklist/</guid>
+    <description>Una lista imprimible, habitación por habitación, para cazar los aparatos siempre encendidos que engordan tu factura, y qué hacer con cada uno.</description>
+    <pubDate>Sat, 18 Jul 2026 00:00:00 GMT</pubDate>
+  </item>
+</channel>
+</rss>

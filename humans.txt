@@ -1,0 +1,9 @@
+# WattFigures
+# Know what every watt costs you.
+
+/* TEAM */
+Owner: WattFigures
+
+/* SITE */
+Standards: HTML5, CSS3
+Components: Tailwind CSS

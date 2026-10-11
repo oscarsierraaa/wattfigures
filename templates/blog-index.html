@@ -1,0 +1,20 @@
+<!--INCLUDE:partials/head.html-->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog", "name": "{{PAGE_TITLE}}", "url": "{{CANONICAL}}", "inLanguage": "{{LANG_ATTR}}"
+  }
+  </script>
+<!--INCLUDE:partials/nav.html-->
+
+  <main id="main" class="container" style="padding-top:2.5rem">
+    <nav aria-label="Breadcrumb" style="font-size:.85rem;color:hsl(var(--muted-foreground))">
+      <a class="ul-link" href="{{HOME}}">{{T_HOME}}</a> / {{PAGE_TITLE}}
+    </nav>
+    <h1 class="font-display" style="font-size:clamp(1.8rem,4vw,2.5rem);margin:.75rem 0 1.5rem">{{PAGE_TITLE}}</h1>
+    <div class="card-grid" data-blog-feed>
+      <p style="color:hsl(var(--muted-foreground))">{{T_BLOG_EMPTY}}</p>
+    </div>
+  </main>
+
+<!--INCLUDE:partials/footer.html-->

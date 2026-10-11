@@ -1,0 +1,74 @@
+{
+  "$schema": "../plantillas_googleads/site.config.schema.md",
+  "brand": "WattFigures",
+  "domain": "wattfigures.com",
+  "tagline": "Know what every watt costs you.",
+  "tagline_es": "Descubre lo que te cuesta cada vatio.",
+  "description": "Interactive calculators and plain-English running costs for every appliance in your home: electricity use, standby drain, EV charging and more.",
+  "description_es": "Calculadoras interactivas y el coste real, en cristiano, de cada aparato de tu casa: consumo eléctrico, standby, carga del coche eléctrico y más.",
+  "founder": "Oscar S.",
+  "languages": [
+    "en",
+    "es"
+  ],
+  "articleSchema": "Article",
+  "theme": {
+    "accent": "38 95% 50%",
+    "accent2": "158 64% 40%",
+    "accentDark": "30 90% 34%",
+    "fontSans": "Inter",
+    "fontMono": "JetBrains Mono",
+    "selfHostFonts": true
+  },
+  "sections": [
+    {
+      "slug": "calculators",
+      "label": "Calculators",
+      "label_es": "Calculadoras",
+      "blurb": "Instant answers: type your numbers, see the cost.",
+      "blurb_es": "Respuestas al instante: pon tus datos y ve el coste."
+    },
+    {
+      "slug": "appliances",
+      "label": "Appliances",
+      "label_es": "Electrodomésticos",
+      "blurb": "What each appliance really costs to run, with editable prices.",
+      "blurb_es": "Lo que cuesta de verdad tener en marcha cada aparato, con precios editables."
+    },
+    {
+      "slug": "guides",
+      "label": "Saving Guides",
+      "label_es": "Guías de ahorro",
+      "blurb": "Practical, tested ways to cut your electricity bill.",
+      "blurb_es": "Formas prácticas y probadas de recortar tu factura de la luz."
+    }
+  ],
+  "disclaimer": {
+    "en": "<strong>Estimates, not bills:</strong> these figures use typical wattages and the price per kWh you enter. Your real cost depends on your tariff, your usage and your specific hardware. Check your bill or meter for exact numbers.",
+    "es": "<strong>Estimaciones, no facturas:</strong> estas cifras usan potencias típicas y el precio por kWh que introduzcas. Tu coste real depende de tu tarifa, tu uso y tus aparatos concretos. Consulta tu factura o tu contador para cifras exactas."
+  },
+  "features": {
+    "search": true,
+    "heroFx": false,
+    "blog": false,
+    "newsletter": {
+      "enabled": false,
+      "backend": null
+    }
+  },
+  "analytics": {
+    "gtmId": null,
+    "ga4Id": "G-SCVMF7HQPC"
+  },
+  "verification": {
+    "google": null,
+    "bing": null
+  },
+  "adsense": {
+    "publisherId": null,
+    "slots": {
+      "inArticle": null
+    }
+  },
+  "outDir": "../wattfigures"
+}

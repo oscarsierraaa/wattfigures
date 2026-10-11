@@ -1,0 +1,81 @@
+<!--INCLUDE:partials/head.html-->
+  <!--
+    ⚠ WattFigures reference only — DO NOT regenerate the home from this template.
+    The live homepages (index.html and es/index.html) are hand-authored per
+    language (interactive hero calculator, stat tiles, appliance search) with
+    native Spanish copy that the {{VAR}} engine cannot reproduce. Scaffold is
+    retired for this site; this file documents the structure, nothing more.
+    English copy below mirrors index.html.
+  -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "WebSite", "name": "{{BRAND}}", "url": "https://{{DOMAIN}}/", "description": "{{DESCRIPTION}}", "inLanguage": "{{LANG_ATTR}}" },
+      { "@type": "Organization", "name": "{{BRAND}}", "url": "https://{{DOMAIN}}/",
+        "description": "{{DESCRIPTION}}",
+        "logo": "https://{{DOMAIN}}/assets/img/icon-512.png",
+        "founder": { "@type": "Person", "name": "{{FOUNDER}}" } }
+    ]
+  }
+  </script>
+<!--INCLUDE:partials/nav.html-->
+
+  <!-- HERO: copy + live calculator -->
+  <section class="wf-hero">
+    <div class="container">
+      <div>
+        <p class="eyebrow">Home energy, in real numbers</p>
+        <h1 class="font-display">{{TAGLINE}}</h1>
+        <p class="lead">{{DESCRIPTION}}</p>
+        <div class="wf-hero-cta">
+          <a class="btn btn-primary" href="{{HOME}}calculators/">Browse calculators</a>
+          <a class="btn btn-ghost" href="{{HOME}}appliances/">Find your appliance</a>
+        </div>
+      </div>
+      <div class="calc-panel" data-calc aria-label="Quick electricity cost calculator">
+        <p class="calc-title">Quick cost check</p>
+        <div class="calc-fields">
+          <label class="calc-field"><span>Power of the device</span>
+            <span class="calc-inputwrap"><input class="has-unit" type="number" inputmode="decimal" min="0" step="10" value="1000" data-calc-var="watts"><span class="unit">W</span></span>
+          </label>
+          <label class="calc-field"><span>Time on per day</span>
+            <span class="calc-inputwrap"><input class="has-unit" type="number" inputmode="decimal" min="0" step="0.5" value="3" data-calc-var="hours"><span class="unit">h</span></span>
+          </label>
+          <label class="calc-field"><span>Price of electricity</span>
+            <span class="calc-inputwrap"><input class="has-unit" type="number" inputmode="decimal" min="0" step="0.01" value="0.17" data-calc-var="price"><span class="unit">$/kWh</span></span>
+          </label>
+        </div>
+        <div class="result-card" role="status" aria-live="polite" style="margin-top:1.1rem">
+          <p class="result-lead">Costs about</p>
+          <p class="result-primary"><output data-calc-out="watts/1000*hours*price*30.44" data-calc-round="2" data-calc-prefix="$"></output><span style="font-size:1rem;color:hsl(var(--muted-foreground));font-weight:600"> / month</span></p>
+          <ul class="result-rows">
+            <li><span>Per day</span> <output data-calc-out="watts/1000*hours*price" data-calc-round="2" data-calc-prefix="$"></output></li>
+            <li><span>Per year</span> <output data-calc-out="watts/1000*hours*price*365" data-calc-round="0" data-calc-prefix="$"></output></li>
+          </ul>
+          <p class="result-note"><a class="wf-more" href="{{HOME}}calculators/electricity-cost/">Open the full calculator →</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main id="main">
+    <!-- Stat tiles, featured calculators, appliance search, guides promo and
+         trust strip follow in the live index.html — see that file. -->
+    <section class="wf-section"><div class="container">
+      <div class="wf-head"><h2 class="font-display">Instant calculators</h2></div>
+      <div class="card-grid">
+<!--EACH:section-->
+        <a class="card" href="{{HOME}}{{S_SLUG}}/">
+          <div class="card-body">
+            <div class="chip">{{S_LABEL}}</div>
+            <h3 class="font-display">{{S_LABEL}}</h3>
+            <p>{{S_BLURB}}</p>
+          </div>
+        </a>
+<!--END:section-->
+      </div>
+    </div></section>
+  </main>
+
+<!--INCLUDE:partials/footer.html-->

@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "updated": "2026-07-18",
+    "note": "Typical annual electricity use per unit for a household energy estimate. Figures are rounded real-world averages for normal use and are editable; actual use depends on the specific model, settings and how often you run it.",
+    "peopleDefault": 3,
+    "seasons": {
+      "note": "Monthly weights (Jan..Dec, Northern hemisphere). 'base' spreads evenly; 'heat' peaks in winter; 'cool' peaks in summer. Normalised to sum 12 at runtime; the Southern hemisphere shifts heat/cool by six months.",
+      "base": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      "heat": [2.6, 2.3, 1.6, 0.8, 0.25, 0.05, 0.03, 0.05, 0.3, 1.0, 1.9, 2.6],
+      "cool": [0.05, 0.05, 0.15, 0.5, 1.1, 2.2, 2.9, 2.8, 1.5, 0.5, 0.15, 0.05],
+      "solar": [0.4, 0.55, 0.85, 1.1, 1.3, 1.4, 1.45, 1.35, 1.05, 0.7, 0.45, 0.35]
+    }
+  },
+  "buckets": [
+    { "id": "cooling", "name": "Cooling & fans", "name_es": "Refrigeración y ventiladores", "c": 1 },
+    { "id": "kitchen", "name": "Kitchen & fridge", "name_es": "Cocina y frío", "c": 2 },
+    { "id": "waterlaundry", "name": "Water & laundry", "name_es": "Agua y lavado", "c": 3 },
+    { "id": "tech", "name": "Electronics & lighting", "name_es": "Electrónica e iluminación", "c": 4 },
+    { "id": "other", "name": "Other big loads", "name_es": "Otras cargas grandes", "c": 5 },
+    { "id": "heating", "name": "Heating", "name_es": "Calefacción", "c": 6 }
+  ],
+  "groups": [
+    { "id": "heating", "name": "Heating", "name_es": "Calefacción", "bucket": "heating", "icon": "heat" },
+    { "id": "cooling", "name": "Cooling", "name_es": "Refrigeración", "bucket": "cooling", "icon": "cool" },
+    { "id": "water", "name": "Hot water", "name_es": "Agua caliente", "bucket": "waterlaundry", "icon": "water" },
+    { "id": "cold", "name": "Fridge & freezer", "name_es": "Frigorífico y congelador", "bucket": "kitchen", "icon": "fridge" },
+    { "id": "kitchen", "name": "Cooking", "name_es": "Cocinar", "bucket": "kitchen", "icon": "kitchen" },
+    { "id": "laundry", "name": "Laundry", "name_es": "Lavado", "bucket": "waterlaundry", "icon": "laundry" },
+    { "id": "electronics", "name": "TV & electronics", "name_es": "TV y electrónica", "bucket": "tech", "icon": "tv" },
+    { "id": "lighting", "name": "Lighting", "name_es": "Iluminación", "bucket": "tech", "icon": "bulb" },
+    { "id": "other", "name": "Other", "name_es": "Otros", "bucket": "other", "icon": "plug" }
+  ],
+  "appliances": [
+    { "id": "heat-pump", "name": "Heat pump (whole home)", "name_es": "Bomba de calor (toda la casa)", "group": "heating", "kwh": 2600, "qty": 0, "season": "heat" },
+    { "id": "space-heater", "name": "Plug-in space heater", "name_es": "Calefactor eléctrico", "group": "heating", "kwh": 630, "qty": 1, "season": "heat" },
+    { "id": "electric-radiator", "name": "Electric radiator", "name_es": "Radiador eléctrico", "group": "heating", "kwh": 700, "qty": 0, "season": "heat" },
+    { "id": "underfloor-heating", "name": "Electric underfloor heating", "name_es": "Suelo radiante eléctrico", "group": "heating", "kwh": 950, "qty": 0, "season": "heat" },
+    { "id": "towel-rail", "name": "Heated towel rail", "name_es": "Toallero eléctrico", "group": "heating", "kwh": 200, "qty": 0, "season": "heat" },
+
+    { "id": "air-conditioner", "name": "Air conditioner (room unit)", "name_es": "Aire acondicionado (unidad)", "group": "cooling", "kwh": 432, "qty": 1, "season": "cool" },
+    { "id": "portable-ac", "name": "Portable AC", "name_es": "Aire portátil", "group": "cooling", "kwh": 350, "qty": 0, "season": "cool" },
+    { "id": "fan", "name": "Fan (standing / ceiling)", "name_es": "Ventilador (pie / techo)", "group": "cooling", "kwh": 45, "qty": 2, "season": "cool" },
+    { "id": "dehumidifier", "name": "Dehumidifier", "name_es": "Deshumidificador", "group": "cooling", "kwh": 252, "qty": 0, "season": "base" },
+
+    { "id": "electric-water-heater", "name": "Electric water heater", "name_es": "Termo eléctrico", "group": "water", "kwh": 1577, "qty": 1, "season": "base", "people": true },
+    { "id": "electric-shower", "name": "Electric shower", "name_es": "Calentador de ducha eléctrico", "group": "water", "kwh": 838, "qty": 0, "season": "base", "people": true },
+
+    { "id": "fridge-freezer", "name": "Fridge-freezer", "name_es": "Frigorífico combi", "group": "cold", "kwh": 330, "qty": 1, "season": "base" },
+    { "id": "fridge", "name": "Fridge (standalone)", "name_es": "Frigorífico (solo)", "group": "cold", "kwh": 200, "qty": 0, "season": "base" },
+    { "id": "chest-freezer", "name": "Chest / upright freezer", "name_es": "Congelador arcón", "group": "cold", "kwh": 300, "qty": 0, "season": "base" },
+    { "id": "wine-cooler", "name": "Wine fridge", "name_es": "Vinoteca", "group": "cold", "kwh": 180, "qty": 0, "season": "base" },
+
+    { "id": "electric-oven", "name": "Electric oven", "name_es": "Horno eléctrico", "group": "kitchen", "kwh": 285, "qty": 1, "season": "base", "people": true },
+    { "id": "electric-hob", "name": "Electric hob / induction", "name_es": "Vitrocerámica / inducción", "group": "kitchen", "kwh": 300, "qty": 1, "season": "base", "people": true },
+    { "id": "microwave", "name": "Microwave", "name_es": "Microondas", "group": "kitchen", "kwh": 57, "qty": 1, "season": "base" },
+    { "id": "kettle", "name": "Electric kettle", "name_es": "Hervidor eléctrico", "group": "kitchen", "kwh": 160, "qty": 1, "season": "base", "people": true },
+    { "id": "coffee-machine", "name": "Coffee machine", "name_es": "Cafetera", "group": "kitchen", "kwh": 119, "qty": 1, "season": "base" },
+    { "id": "air-fryer", "name": "Air fryer", "name_es": "Freidora de aire", "group": "kitchen", "kwh": 90, "qty": 0, "season": "base" },
+    { "id": "toaster", "name": "Toaster", "name_es": "Tostadora", "group": "kitchen", "kwh": 40, "qty": 1, "season": "base" },
+
+    { "id": "washing-machine", "name": "Washing machine", "name_es": "Lavadora", "group": "laundry", "kwh": 187, "qty": 1, "season": "base", "people": true },
+    { "id": "dishwasher", "name": "Dishwasher", "name_es": "Lavavajillas", "group": "laundry", "kwh": 286, "qty": 1, "season": "base", "people": true },
+    { "id": "tumble-dryer", "name": "Tumble dryer", "name_es": "Secadora", "group": "laundry", "kwh": 390, "qty": 0, "season": "base", "people": true },
+    { "id": "iron", "name": "Iron", "name_es": "Plancha", "group": "laundry", "kwh": 50, "qty": 1, "season": "base" },
+
+    { "id": "tv", "name": "TV", "name_es": "Televisor", "group": "electronics", "kwh": 110, "qty": 2, "season": "base" },
+    { "id": "game-console", "name": "Game console", "name_es": "Videoconsola", "group": "electronics", "kwh": 82, "qty": 1, "season": "base" },
+    { "id": "desktop-pc", "name": "Desktop PC", "name_es": "PC de sobremesa", "group": "electronics", "kwh": 183, "qty": 1, "season": "base" },
+    { "id": "laptop", "name": "Laptop", "name_es": "Portátil", "group": "electronics", "kwh": 46, "qty": 2, "season": "base", "people": true },
+    { "id": "monitor", "name": "Monitor", "name_es": "Monitor", "group": "electronics", "kwh": 55, "qty": 1, "season": "base" },
+    { "id": "router", "name": "Router + set-top box (always on)", "name_es": "Router + descodificador (siempre on)", "group": "electronics", "kwh": 75, "qty": 1, "season": "base" },
+    { "id": "soundbar", "name": "Soundbar / hi-fi", "name_es": "Barra de sonido / equipo", "group": "electronics", "kwh": 40, "qty": 1, "season": "base" },
+
+    { "id": "led-bulb", "name": "LED bulb", "name_es": "Bombilla LED", "group": "lighting", "kwh": 9, "qty": 20, "season": "base" },
+    { "id": "halogen-bulb", "name": "Halogen / incandescent bulb", "name_es": "Bombilla halógena / incandescente", "group": "lighting", "kwh": 45, "qty": 0, "season": "base" },
+
+    { "id": "ev-charging", "name": "EV home charging", "name_es": "Carga de coche eléctrico en casa", "group": "other", "kwh": 2000, "qty": 0, "season": "base" },
+    { "id": "pool-pump", "name": "Pool pump", "name_es": "Bomba de piscina", "group": "other", "kwh": 900, "qty": 0, "season": "cool" },
+    { "id": "hot-tub", "name": "Hot tub", "name_es": "Jacuzzi / spa", "group": "other", "kwh": 2500, "qty": 0, "season": "base" },
+    { "id": "vacuum", "name": "Vacuum cleaner", "name_es": "Aspiradora", "group": "other", "kwh": 30, "qty": 1, "season": "base" },
+    { "id": "hair-dryer", "name": "Hair dryer", "name_es": "Secador de pelo", "group": "other", "kwh": 33, "qty": 1, "season": "base", "people": true },
+    { "id": "phone-charging", "name": "Phone / tablet charging", "name_es": "Carga de móvil / tablet", "group": "other", "kwh": 12, "qty": 3, "season": "base", "people": true }
+  ]
+}

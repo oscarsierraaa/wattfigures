@@ -1,0 +1,40 @@
+  <footer class="site-footer print-hide">
+    <div class="container">
+      <div style="display:flex;flex-wrap:wrap;gap:1.5rem;justify-content:space-between;align-items:center">
+        <div>
+          <div class="brand font-display" style="font-size:1rem">{{BRAND_HTML}}</div>
+          <p style="margin:.35rem 0 0;max-width:32rem">{{TAGLINE}}</p>
+        </div>
+        <nav class="footer-links" aria-label="{{LEGAL_ARIA}}">
+          <a href="{{HOME}}legal/about/" data-i18n="footer.about">{{F_ABOUT}}</a>
+          <a href="{{HOME}}legal/methodology/" data-i18n="footer.methodology">{{F_METHOD}}</a>
+          <a href="{{HOME}}legal/contact/" data-i18n="footer.contact">{{F_CONTACT}}</a>
+          <a href="{{HOME}}legal/privacy/" data-i18n="footer.privacy">{{F_PRIVACY}}</a>
+          <a href="{{HOME}}legal/terms/" data-i18n="footer.terms">{{F_TERMS}}</a>
+          <a href="{{HOME}}legal/cookies/" data-i18n="footer.cookies">{{F_COOKIES}}</a>
+          <a href="{{HOME}}legal/disclosures/" data-i18n="footer.disclosures">{{F_DISCLOSURES}}</a>
+        </nav>
+      </div>
+      <p class="footer-disclaimer">{{F_DISCLAIMER}}</p>
+      <p style="margin:1.5rem 0 0;font-size:.85rem">© {{YEAR}} {{BRAND}}. <span data-i18n="footer.rights">All rights reserved.</span></p>
+    </div>
+  </footer>
+
+  <script src="{{REL}}assets/shared.js"></script>
+  <script src="{{REL}}assets/page.js" defer></script>
+<!--IF:search-->
+  <!-- Ships with the header-search markup in nav.html, under the same flag.
+       Kept here rather than in a generator's PAGE_SCRIPTS because the markup is
+       global: when it was per-page, every generated appliance page rendered the
+       search box with no script behind it and the input did nothing. -->
+  <script src="{{REL}}assets/header-search.js" defer></script>
+<!--END:search-->
+<!--IF:adsense-->
+  <script src="{{REL}}assets/ads-init.js" defer></script>
+<!--END:adsense-->
+<!--IF:newsletter-->
+  <script src="{{REL}}assets/newsletter.js" defer></script>
+<!--END:newsletter-->
+{{PAGE_SCRIPTS}}
+</body>
+</html>

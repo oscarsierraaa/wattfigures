@@ -1,0 +1,31 @@
+# Git guarda el texto en LF y lo saca en LF en cualquier plataforma.
+#
+# Por qué existe esto. Sin él manda `core.autocrlf`, que en Windows expande los
+# ficheros a CRLF al hacer checkout. El contenido no cambia, pero el sha1 de los
+# bytes en disco deja de ser el del blob, y eso rompe dos cosas que no se ven:
+#
+#   · tools/version-assets.mjs sella `?v=<sha1 del fichero en disco>`. Un build
+#     lanzado en Windows escribe hashes derivados de CRLF en las 156 páginas, y
+#     apuntan a un valor que el fichero servido no tiene nunca. Cinco assets de
+#     main los llevaban así hasta de85563 — consent-init.js, calc.js,
+#     energy-prices.js, home-prices.js y dashboard.js.
+#   · test/assets.test.mjs compara esos sellos contra el disco, así que fallaba
+#     2 de 69 en un clon limpio de Windows sin que hubiera nada roto.
+#
+# Y assets/shared.css, que se genera con tools/minify-shared-css.mjs, salía con
+# un formateo distinto según los finales de línea de su fuente —el mismo CSS,
+# verificado ignorando espacios, pero otro hash—, así que Windows y el CI se lo
+# pisaban mutuamente en cada push.
+*               text=auto eol=lf
+
+# Binarios: que git no los toque ni intente detectar nada.
+*.pagefind      binary
+*.pf_fragment   binary
+*.pf_index      binary
+*.pf_meta       binary
+*.woff2         binary
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.webp          binary
+*.ico           binary

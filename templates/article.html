@@ -1,0 +1,72 @@
+<!--INCLUDE:partials/head.html-->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "{{ARTICLE_TYPE}}",
+        "headline": "{{PAGE_TITLE}}",
+        "description": "{{PAGE_DESC}}",
+        "image": "https://{{DOMAIN}}/assets/img/{{OG_IMAGE}}",
+        "datePublished": "{{DATE_PUBLISHED}}",
+        "dateModified": "{{DATE_MODIFIED}}",
+        "inLanguage": "{{LANG_ATTR}}",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "{{CANONICAL}}" },
+        "author": { "@type": "Person", "name": "{{FOUNDER}}", "url": "https://{{DOMAIN}}/{{LANG_PREFIX}}legal/about/" },
+        "publisher": { "@type": "Organization", "name": "{{BRAND}}", "url": "https://{{DOMAIN}}/" }
+      },
+      { "@type": "BreadcrumbList", "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "{{T_HOME}}", "item": "https://{{DOMAIN}}/{{LANG_PREFIX}}" },
+        { "@type": "ListItem", "position": 2, "name": "{{SECTION_LABEL}}", "item": "https://{{DOMAIN}}/{{LANG_PREFIX}}{{SECTION_SLUG}}/" },
+        { "@type": "ListItem", "position": 3, "name": "{{PAGE_TITLE}}", "item": "{{CANONICAL}}" }
+      ] },
+      { "@type": "FAQPage", "mainEntity": [ {{FAQ_JSONLD}} ] }
+    ]
+  }
+  </script>
+<!--INCLUDE:partials/nav.html-->
+
+  <main id="main" class="container" style="padding-top:2.5rem">
+    <nav aria-label="Breadcrumb" class="print-hide" style="font-size:.85rem;color:hsl(var(--muted-foreground))">
+      <a class="ul-link" href="{{HOME}}">{{T_HOME}}</a> /
+      <a class="ul-link" href="{{HOME}}{{SECTION_SLUG}}/">{{SECTION_LABEL}}</a> / {{PAGE_TITLE}}
+    </nav>
+
+    <article class="prose-sec" style="margin-top:1.5rem">
+      <h1 class="font-display" style="font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.15">{{PAGE_TITLE}}</h1>
+<!--INCLUDE:partials/article-meta.html-->
+      <p class="lead" style="color:hsl(var(--muted-foreground))">{{PAGE_DESC}}</p>
+      {{DISCLAIMER_BLOCK}}
+
+      <!-- BODY: write ≥800 words of original content. Real h2/h3 hierarchy,
+           bold key terms, lists, and tables for any option/price listings.
+           Add one big (≥1200px wide) hero image early — Discover and Pinterest
+           both require large images. -->
+<!--IF:pageEn-->
+      <h2>Write your first section heading here</h2>
+      <p>Replace this with real content. Aim for ≥800 words, structured with
+         subheadings, <strong>bold key terms</strong>, lists and tables.</p>
+<!--END:pageEn-->
+<!--IF:pageEs-->
+      <h2>Escribe aquí tu primer encabezado de sección</h2>
+      <p>Sustituye esto por contenido real. Apunta a ≥800 palabras, con
+         subtítulos, <strong>términos clave en negrita</strong>, listas y tablas.</p>
+<!--END:pageEs-->
+
+<!--INCLUDE:partials/ad-slot.html-->
+
+      <h2 id="faq">{{T_FAQ}}</h2>
+      {{FAQ_HTML}}
+    </article>
+
+<!--INCLUDE:partials/share.html-->
+
+    <aside class="prose-sec print-hide" style="margin-top:2rem">
+      <h2>{{T_RELATED}}</h2>
+      <ul>
+        <li><a class="ul-link" href="{{HOME}}{{SECTION_SLUG}}/">{{T_MOREIN}} {{SECTION_LABEL}}</a></li>
+      </ul>
+    </aside>
+  </main>
+
+<!--INCLUDE:partials/footer.html-->

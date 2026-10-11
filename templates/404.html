@@ -1,0 +1,18 @@
+<!--INCLUDE:partials/head.html-->
+<!--INCLUDE:partials/nav.html-->
+
+  <main id="main" class="container" style="padding:6rem 1.25rem;text-align:center">
+    <p class="eyebrow">404</p>
+<!--IF:pageEn-->
+    <h1 class="font-display" style="font-size:clamp(2rem,5vw,3rem);margin:.5rem 0 1rem">Page not found</h1>
+    <p class="lead" style="margin:0 auto 2rem;max-width:34rem">The page you were looking for doesn't exist or moved.</p>
+    <a class="btn btn-primary" href="{{HOME}}">Back to home</a>
+<!--END:pageEn-->
+<!--IF:pageEs-->
+    <h1 class="font-display" style="font-size:clamp(2rem,5vw,3rem);margin:.5rem 0 1rem">Página no encontrada</h1>
+    <p class="lead" style="margin:0 auto 2rem;max-width:34rem">La página que buscabas no existe o se ha movido.</p>
+    <a class="btn btn-primary" href="{{HOME}}">Volver al inicio</a>
+<!--END:pageEs-->
+  </main>
+
+<!--INCLUDE:partials/footer.html-->
